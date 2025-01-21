@@ -11,8 +11,8 @@
 - Minimalistic Dark Theme
 
 ## Screenshots
-![Focus Mode](FocusMode_screenshot.png)
-![Break Mode](BreakMode_screenshot.png)
+![Focus Mode](FocusMode_Screenshot.png)
+![Break Mode](BreakMode_Screenshot.png)
 
 ## Installation
 1. Clone the repository:
@@ -31,7 +31,6 @@
    ```bash
    flutter run
    ```
-- Provide step-by-step instructions to set up the project locally.
 
 ---
 
