@@ -11,8 +11,8 @@
 - Minimalistic Dark Theme
 
 ## Screenshots
-![Focus Mode](FocusMode_Screenshot.png)
-![Break Mode](BreakMode_Screenshot.png)
+<img src="FocusMode_screenshot.png" alt="Focus Mode" width="50%"/>
+<img src="BreakMode_screenshot.png" alt="Break Mode" width="50%"/>
 
 ## Installation
 1. Clone the repository:
