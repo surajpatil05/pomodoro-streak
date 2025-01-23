@@ -108,7 +108,6 @@ class BreakTimerNotifier extends Notifier<TimerState> {
     int timeSpentToday = state.timeSpentToday + duration;
 
     _databaseHelper.insertBreakCycleCountAndTimeSpent(
-      'Today',
       cyclesToday,
       timeSpentToday,
       DateTime.now(),
@@ -122,8 +121,8 @@ class BreakTimerNotifier extends Notifier<TimerState> {
 
 // Fetch data (Cycle Count and Time Spent) for the selected timeline and update state
   Future<void> fetchBreakModeData(String timeline) async {
-    final result = await _databaseHelper
-        .fetchBreakCycleCountAndTimeSpentByRange(timeline.toLowerCase());
+    final result =
+        await _databaseHelper.fetchBreakCycleCountAndTimeSpentByRange(timeline);
 
     int cycleCount = 0;
     int timeSpent = 0;
@@ -134,26 +133,26 @@ class BreakTimerNotifier extends Notifier<TimerState> {
     }
 
     // Update only the relevant fields based on the timeline
-    switch (timeline.toLowerCase()) {
-      case 'today':
+    switch (timeline) {
+      case 'Today':
         state = state.copyWith(
           cyclesToday: cycleCount,
           timeSpentToday: timeSpent,
         );
         break;
-      case 'this_week':
+      case 'This Week':
         state = state.copyWith(
           cyclesThisWeek: cycleCount,
           timeSpentThisWeek: timeSpent,
         );
         break;
-      case 'this_month':
+      case 'This Month':
         state = state.copyWith(
           cyclesThisMonth: cycleCount,
           timeSpentThisMonth: timeSpent,
         );
         break;
-      case 'total_time':
+      case 'Total Time':
         state = state.copyWith(
           totalCycles: cycleCount,
           totalTimeSpent: timeSpent,
@@ -163,8 +162,9 @@ class BreakTimerNotifier extends Notifier<TimerState> {
   }
 
   // Update the selected timeline in the state
-  void selectedTimeline(String timeline) {
+  void updateSelectedTimeline(String timeline) {
     state = state.copyWith(selectedTimeline: timeline);
+
     fetchBreakModeData(
         timeline); // Fetch and update data for the new selected from bottomsheet timeline
   }

@@ -110,7 +110,6 @@ class FocusTimerNotifier extends Notifier<TimerState> {
 
     // Save to database and update state
     _databaseHelper.insertFocusCycleCountAndTimeSpent(
-      'Today',
       cyclesToday,
       timeSpentToday,
       DateTime.now(),
@@ -125,8 +124,8 @@ class FocusTimerNotifier extends Notifier<TimerState> {
 
   // Fetch data (Cycle Count and Time Spent) for the selected timeline and update state
   Future<void> fetchFocusModeData(String timeline) async {
-    final result = await _databaseHelper
-        .fetchFocusCycleCountAndTimeSpentByRange(timeline.toLowerCase());
+    final result =
+        await _databaseHelper.fetchFocusCycleCountAndTimeSpentByRange(timeline);
 
     int cycleCount = 0;
     int timeSpent = 0;
@@ -137,26 +136,26 @@ class FocusTimerNotifier extends Notifier<TimerState> {
     }
 
     // Update only the relevant fields based on the timeline
-    switch (timeline.toLowerCase()) {
-      case 'today':
+    switch (timeline) {
+      case 'Today':
         state = state.copyWith(
           cyclesToday: cycleCount,
           timeSpentToday: timeSpent,
         );
         break;
-      case 'this_week':
+      case 'This Week':
         state = state.copyWith(
           cyclesThisWeek: cycleCount,
           timeSpentThisWeek: timeSpent,
         );
         break;
-      case 'this_month':
+      case 'This Month':
         state = state.copyWith(
           cyclesThisMonth: cycleCount,
           timeSpentThisMonth: timeSpent,
         );
         break;
-      case 'total_time':
+      case 'Total Time':
         state = state.copyWith(
           totalCycles: cycleCount,
           totalTimeSpent: timeSpent,
@@ -168,6 +167,7 @@ class FocusTimerNotifier extends Notifier<TimerState> {
   // Update the selected timeline in the state
   void updateSelectedTimeline(String timeline) {
     state = state.copyWith(selectedTimeline: timeline);
+
     fetchFocusModeData(
         timeline); // Fetch and update data for the new selected timeline from the bottomsheet
   }

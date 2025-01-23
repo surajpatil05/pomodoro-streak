@@ -1,4 +1,5 @@
 // selected_timeline_option_notifier.dart
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_streak/providers/focus_timer_notifier.dart';
 
@@ -26,6 +27,7 @@ class SelectDropDownNotifier extends Notifier<String> {
   void confirmSelection() {
     _selectOption = _highlightedOption; // confirm the highlighted option
     // Optionally, update the state to reflect the selection
+    debugPrint('Setting highlighted option: $selectedOption');
     state = selectedOption;
   }
 }
