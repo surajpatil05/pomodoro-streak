@@ -13,6 +13,7 @@
 ## Screenshots
 <img src="./FocusMode_Screenshot.png" alt="Focus Mode" width="50%"/>
 <img src="./BreakMode_Screenshot.png" alt="Break Mode" width="50%"/>
+<img src="./info_Screenshot.png" alt="information dialogue" width="50%"/>
 
 ## Installation
 1. Clone the repository:
@@ -42,7 +43,7 @@
 - View session statistics by selecting a timeline in the bottom sheet.
 
 ## Features to be added in future versions
-
+- [ ] notification after each session is finished
 - [ ] Screen Always on while Timer is Running
 - [ ] Display Pomodoro remaining Timer on LockScreen While Running
-- [ ] different sounds to select from to play after Timer session Completes
+- [ ] different sounds to select from to play after Timer duration Completes
