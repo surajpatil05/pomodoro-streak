@@ -1,4 +1,6 @@
 // TimerState class to hold the state
+import 'package:flutter/material.dart';
+
 class TimerState {
   final int focusTime; // Focus mode time
   final int breakTime; // Break mode time
@@ -76,17 +78,20 @@ class TimerState {
 
   // Helper to get cycle count based on selected timeline
   int getCyclesCount() {
-    switch (selectedTimeline.toLowerCase()) {
-      case 'today':
+    debugPrint('Selected Timeline: $selectedTimeline');
+    debugPrint(
+        'Cycles Today: $cyclesToday, This Week: $cyclesThisWeek, This Month: $cyclesThisMonth, Total: $totalCycles');
+    switch (selectedTimeline) {
+      case 'Today':
         return cyclesToday;
 
-      case 'this_week':
+      case 'This Week':
         return cyclesThisWeek;
 
-      case 'this_month':
+      case 'This Month':
         return cyclesThisMonth;
 
-      case 'total_time':
+      case 'Total Time':
         return totalCycles;
       default:
         return 0;
@@ -96,17 +101,17 @@ class TimerState {
   // Helper to format time spent based on selected timeline
   String formatTimeSpent() {
     int timeSpent;
-    switch (selectedTimeline.toLowerCase()) {
-      case 'today':
+    switch (selectedTimeline) {
+      case 'Today':
         timeSpent = timeSpentToday;
         break;
-      case 'this_week':
+      case 'This Week':
         timeSpent = timeSpentThisWeek;
         break;
-      case 'this_month':
+      case 'This Month':
         timeSpent = timeSpentThisMonth;
         break;
-      case 'total_time':
+      case 'Total Time':
         timeSpent = totalTimeSpent;
         break;
       default:
