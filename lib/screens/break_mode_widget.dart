@@ -259,14 +259,12 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              textStyle: const TextStyle(fontSize: 18),
+              textStyle:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             child: Transform.scale(
               scale: 1.3,
-              child: const Text(
-                'START',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
+              child: const Text('START'),
             ),
           ),
 
@@ -280,18 +278,12 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
               side: BorderSide(color: Colors.white, width: 2),
               backgroundColor: Colors.black,
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              textStyle: const TextStyle(fontSize: 18),
+              textStyle:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             child: Transform.scale(
               scale: 1.3,
-              child: const Text(
-                'PAUSE',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
+              child: const Text('PAUSE'),
             ),
           ),
 
@@ -307,14 +299,12 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              textStyle: const TextStyle(fontSize: 18),
+              textStyle:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             child: Transform.scale(
               scale: 1.3,
-              child: const Text(
-                'RESUME',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
+              child: const Text('RESUME'),
             ),
           ),
       ],

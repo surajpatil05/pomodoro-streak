@@ -21,24 +21,44 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
 
     // Synchronize the dropdown value with focusTimerProvider after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(focusTimerProvider.notifier).fetchFocusModeData('Today');
+      final defaultTimeline = ref.read(focusTimerProvider).selectedTimeline;
+      ref.read(focusTimerProvider.notifier).fetchFocusModeData(defaultTimeline);
       syncWithFocusTimer(ref); // Sync dropdown with focusTimerProvider
     });
   }
 
-  // Function to sync dropdown with focusTimerProvider when the dropdown changes
-  void syncWithFocusTimer(WidgetRef ref) {
-    // Get the selected focus timeline from focusTimerProvider
-    final focusTimeline = ref.read(focusTimerProvider).selectedTimeline;
+  // // Function to sync dropdown with focusTimerProvider when the dropdown changes
+  // void syncWithFocusTimer(WidgetRef ref) {
+  //   // Get the selected focus timeline from focusTimerProvider
+  //   final focusTimeline = ref.read(focusTimerProvider).selectedTimeline;
 
-    // Update the selectDropDownProvider with the focusTimeline
-    ref
-        .read(selectDropDownProvider.notifier)
-        .setHighlightedOption(focusTimeline);
-  }
+  //   // Update the selectDropDownProvider with the focusTimeline
+  //   ref
+  //       .read(selectDropDownProvider.notifier)
+  //       .setHighlightedOption(focusTimeline);
+  // }
 
   @override
   Widget build(BuildContext context) {
+    // Listen for changes in focusTimerProvider and update selectDropDownProvider
+    ref.listen(focusTimerProvider, (_, selectedOption) async {
+      final focusTimeline = selectedOption.selectedTimeline;
+
+      // Update selectDropDownProvider if the selected timeline has changed
+      if (ref.read(selectDropDownProvider) != focusTimeline) {
+        debugPrint('Selected option changed to: $focusTimeline');
+
+        ref
+            .read(selectDropDownProvider.notifier)
+            .setHighlightedOption(focusTimeline);
+
+        // Fetch and update data for the selected timeline
+        await ref
+            .read(focusTimerProvider.notifier)
+            .fetchFocusModeData(focusTimeline);
+      }
+    });
+
     // Provider to update the timeSpent and cyclesCount values
     final timerState = ref.watch(focusTimerProvider);
 
@@ -258,14 +278,12 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              textStyle: const TextStyle(fontSize: 18),
+              textStyle:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             child: Transform.scale(
               scale: 1.3,
-              child: const Text(
-                'START',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
+              child: const Text('START'),
             ),
           ),
 
@@ -279,18 +297,12 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
               side: BorderSide(color: Colors.white, width: 2), // white border
               backgroundColor: Colors.black,
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              textStyle: const TextStyle(fontSize: 18),
+              textStyle:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             child: Transform.scale(
               scale: 1.3,
-              child: const Text(
-                'PAUSE',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
+              child: const Text('PAUSE'),
             ),
           ),
 
@@ -306,14 +318,12 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              textStyle: const TextStyle(fontSize: 18),
+              textStyle:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             child: Transform.scale(
               scale: 1.3,
-              child: const Text(
-                'RESUME',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
+              child: const Text('RESUME'),
             ),
           ),
       ],

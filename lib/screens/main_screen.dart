@@ -71,6 +71,114 @@ class MainScreen extends ConsumerWidget {
           ),
         ),
         actions: [
+          // Show about dialog button when the timer is not running or paused
+          if (!(timerState.isRunning || timerState.isPaused))
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+              child: IconButton(
+                icon: Icon(
+                  Icons.help_outline_outlined,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: () {
+                  // Show the dialog when the help button is pressed
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                        insetPadding: EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical:
+                                50), // Adds space from top to show below app bar
+                        backgroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Suggestions',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors
+                                        .white, // White text color for contrast
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  'Pomodoro',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white, // White text color
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  "The Pomodoro Technique helps you use your time more efficiently by breaking your work into manageable intervals. "
+                                  "You focus for 25 minutes, followed by a 5-minute break. These intervals, called 'pomodoros,' repeat throughout your workday. "
+                                  "The technique is simple but powerful, and when combined with a timer like Pomodoro Streak, it can significantly boost your productivity and keep you on track.",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                SizedBox(
+                                    height:
+                                        16), // Space between Pomodoro and Meditation info
+                                Text(
+                                  'Meditation',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  "Meditation has been proven to reduce stress, improve focus, and enhance overall well-being. "
+                                  "It doesn’t have to be complicated—just a few minutes of mindfulness can make a big difference. "
+                                  "At Pomodoro Streak, we recommend starting with these 3 simple steps:\n\n"
+                                  "1. Set the timer to 5 minutes.\n"
+                                  "2. Close your eyes, take a deep breath, and relax.\n"
+                                  "3. Focus on your breath and let any thoughts drift away.",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                SizedBox(height: 16), // Space before OK button
+                                Center(
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: Colors.black,
+                                      overlayColor: Colors.transparent,
+                                      textStyle: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                    },
+                                    child: Text(
+                                      'OK',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+
+          // Show cancel button when the timer is running or paused
           if (timerState.isRunning || timerState.isPaused)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
