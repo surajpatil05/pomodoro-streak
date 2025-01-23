@@ -1,11 +1,14 @@
 // custom_bottom_sheet.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pomodoro_streak/providers/break_timer_notifier.dart';
 import 'package:pomodoro_streak/providers/focus_timer_notifier.dart';
 import 'package:pomodoro_streak/providers/select_dropdown_notifier.dart';
 
 void showBottomSheetContent(BuildContext context, WidgetRef ref) {
   final options = ['Today', 'This Week', 'This Month', 'Total Time'];
+
+  // Read the current selected option from the dropdown provider
   final selectedTimeline = ref.read(selectDropDownProvider);
 
   showModalBottomSheet(
@@ -39,7 +42,7 @@ void showBottomSheetContent(BuildContext context, WidgetRef ref) {
 
                   return GestureDetector(
                     onTap: () {
-                      // Update selected option in the dropdown
+                      // Update selected option in bottomsheet dropdown and highlight it
                       ref
                           .read(selectDropDownProvider.notifier)
                           .setHighlightedOption(option);
@@ -47,6 +50,11 @@ void showBottomSheetContent(BuildContext context, WidgetRef ref) {
                       // Notify FocusTimerNotifier about the timeline change
                       ref
                           .read(focusTimerProvider.notifier)
+                          .updateSelectedTimeline(option);
+
+                      // Notify BreakTimerNotifier about the timeline change
+                      ref
+                          .read(breakTimerProvider.notifier)
                           .updateSelectedTimeline(option);
 
                       Navigator.pop(context);
