@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -30,7 +29,6 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE focus_mode (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        timeline TEXT, 
         cycle_count INTEGER,
         time_spent INTEGER,
         timestamp TEXT
@@ -40,7 +38,6 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE break_mode (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        timeline TEXT,
         cycle_count INTEGER,
         time_spent INTEGER,
         timestamp TEXT
@@ -55,38 +52,30 @@ class DatabaseHelper {
     return await db.rawQuery(query);
   }
 
-  // Helper Method to Format the date and time to yyyy-MM-dd HH:mm format before displaying in the ui
-  String formatDateTime(DateTime dateTime) {
-    return DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
-  }
-
   // Insert data in Focuse Mode table
   Future<int> insertFocusCycleCountAndTimeSpent(
-      String timeline, int cycleCount, int timeSpent, DateTime dateTime) async {
+      int cycleCount, int timeSpent, DateTime dateTime) async {
     final db = await instance.database;
-    String formattedTimeStamp = formatDateTime(dateTime);
     debugPrint(
-        'Inserting into focus_mode: $timeline, $cycleCount, $timeSpent, $formattedTimeStamp');
+        'Inserting into focus_mode: $cycleCount, $timeSpent, $dateTime.toIso8601String()');
     return await db.insert('focus_mode', {
-      'timeline': timeline,
       'cycle_count': cycleCount,
       'time_spent': timeSpent,
-      'timestamp': formattedTimeStamp,
+      'timestamp': dateTime.toIso8601String(),
     });
   }
 
   // Insert data in Break Mode table
   Future<int> insertBreakCycleCountAndTimeSpent(
-      String timeline, int cycleCount, int timeSpent, DateTime dateTime) async {
+      int cycleCount, int timeSpent, DateTime dateTime) async {
     final db = await instance.database;
-    String formattedTimeStamp = formatDateTime(dateTime);
+
     debugPrint(
-        'Inserting into break_mode: $timeline, $cycleCount, $timeSpent, $formattedTimeStamp');
+        'Inserting into break_mode: $cycleCount, $timeSpent, $dateTime.toIso8601String()');
     return await db.insert('break_mode', {
-      'timeline': timeline,
       'cycle_count': cycleCount,
       'time_spent': timeSpent,
-      'timestamp': formattedTimeStamp,
+      'timestamp': dateTime.toIso8601String(),
     });
   }
 
@@ -96,16 +85,18 @@ class DatabaseHelper {
     final db = await instance.database;
     // Adjust query based on the timeline
     String query;
-    if (timeline == 'today') {
-      query = "SELECT * FROM focus_mode WHERE date(timestamp) = date('now')";
-    } else if (timeline == 'this_week') {
+    if (timeline == 'Today') {
       query =
-          "SELECT * FROM focus_mode WHERE strftime('%W', timestamp) = strftime('%W', 'now')";
-    } else if (timeline == 'this_month') {
+          "SELECT * FROM focus_mode WHERE date(timestamp, 'localtime') = date('now', 'localtime')";
+    } else if (timeline == 'This Week') {
       query =
-          "SELECT * FROM focus_mode WHERE strftime('%m', timestamp) = strftime('%m', 'now')";
+          "SELECT * FROM focus_mode WHERE strftime('%W', timestamp, 'localtime') = strftime('%W', 'now', 'localtime')";
+    } else if (timeline == 'This Month') {
+      query =
+          "SELECT * FROM focus_mode WHERE strftime('%Y-%m', timestamp, 'localtime') = strftime('%Y-%m', 'now', 'localtime')";
     } else {
-      query = "SELECT * FROM focus_mode"; // Total time, all records
+      query =
+          "SELECT * FROM focus_mode WHERE strftime('%Y', timestamp, 'localtime') = strftime('%Y', 'now', 'localtime')"; // Total time, all records
     }
     return await db.rawQuery(query);
   }
@@ -116,17 +107,37 @@ class DatabaseHelper {
     final db = await instance.database;
     // Adjust query based on the timeline
     String query;
-    if (timeline == 'today') {
-      query = "SELECT * FROM break_mode WHERE date(timestamp) = date('now')";
-    } else if (timeline == 'this_week') {
+    if (timeline == 'Today') {
       query =
-          "SELECT * FROM break_mode WHERE strftime('%W', timestamp) = strftime('%W', 'now')";
-    } else if (timeline == 'this_month') {
+          "SELECT * FROM break_mode WHERE date(timestamp, 'localtime') = date('now', 'localtime')";
+    } else if (timeline == 'This_Week') {
       query =
-          "SELECT * FROM break_mode WHERE strftime('%m', timestamp) = strftime('%m', 'now')";
+          "SELECT * FROM break_mode WHERE strftime('%W', timestamp, 'localtime') = strftime('%W', 'now', 'localtime')";
+    } else if (timeline == 'This_Month') {
+      query =
+          "SELECT * FROM break_mode WHERE strftime('%Y-%m', timestamp, 'localtime') = strftime('%Y-%m', 'now', 'localtime')";
     } else {
-      query = "SELECT * FROM break_mode"; // Total time, all records
+      query =
+          "SELECT * FROM break_mode WHERE strftime('%Y', timestamp, 'localtime') = strftime('%Y', 'now', 'localtime')"; // Total time, all records
     }
     return await db.rawQuery(query);
+  }
+
+  // function to return all the stored records in the database in debug console
+  Future<List<Map<String, dynamic>>> fetchAllFocusModeData() async {
+    final db = await instance.database;
+
+    final result = db.rawQuery("SELECT * FROM focus_mode");
+
+    return result;
+  }
+
+  // function to return all the stored records in the database in debug console
+  Future<List<Map<String, dynamic>>> fetchAllBreakModeData() async {
+    final db = await instance.database;
+
+    final result = db.rawQuery("SELECT * FROM break_mode");
+
+    return result;
   }
 }
