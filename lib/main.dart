@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pomodoro_streak/data/database_helper.dart';
 
 import 'package:pomodoro_streak/screens/main_screen.dart';
 
@@ -23,7 +24,7 @@ ThemeData themeData = ThemeData(
 
 // Future<void> deleteDatabaseFile() async {
 //   final dbPath = await getDatabasesPath();
-//   final path = '$dbPath/your_database_name.db';
+//   final path = '$dbPath/timer_data.db';
 
 //   // Delete the database
 //   await deleteDatabase(path);
@@ -31,9 +32,18 @@ ThemeData themeData = ThemeData(
 // }
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
-  // // Delete the database (for testing or development purposes)
+  List<Map<String, dynamic>> focusModeData =
+      await DatabaseHelper.instance.fetchAllFocusModeData();
+
+  List<Map<String, dynamic>> breakModeData =
+      await DatabaseHelper.instance.fetchAllBreakModeData();
+
+  debugPrint(focusModeData.toString());
+  debugPrint(breakModeData.toString());
+
+  // Delete the database (for testing or development purposes)
   // await deleteDatabaseFile();
 
   runApp(
