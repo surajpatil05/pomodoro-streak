@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_streak/data/database_helper.dart';
 
 import 'package:pomodoro_streak/model/timer_state.dart';
+import 'package:pomodoro_streak/services/notification_service.dart';
 
 // TimerNotifier class to manage the timer logic
 class FocusTimerNotifier extends Notifier<TimerState> {
@@ -31,7 +33,7 @@ class FocusTimerNotifier extends Notifier<TimerState> {
     );
   }
 
-  // Start the timer
+  // starts the Focus timer and deliver notification after the timer ends
   void startFocusTimer() {
     if (state.isRunning) return;
 
@@ -45,6 +47,8 @@ class FocusTimerNotifier extends Notifier<TimerState> {
       } else {
         timer.cancel();
         completeFocusPomodoroSession(); // Update cycle and time spent
+        NotificationService().showNotification(
+            title: 'PomodoroStreak', body: 'Pomodoro session Finished');
         resetFocusTimer(); // Reset the timer when it ends
       }
     });

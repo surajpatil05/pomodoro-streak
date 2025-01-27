@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_streak/data/database_helper.dart';
 
 import 'package:pomodoro_streak/model/timer_state.dart';
+import 'package:pomodoro_streak/services/notification_service.dart';
 
 class BreakTimerNotifier extends Notifier<TimerState> {
   Timer? _timer;
@@ -30,7 +31,7 @@ class BreakTimerNotifier extends Notifier<TimerState> {
     );
   }
 
-  // starts the break timer
+  // starts the break timer and deliver notification after the timer ends
   void startBreakTimer() {
     if (state.isRunning) return; // Prevent starting a timer if already running
 
@@ -43,6 +44,8 @@ class BreakTimerNotifier extends Notifier<TimerState> {
       } else {
         timer.cancel();
         completeBreakPomodoroSession(); // Update cycle and time spent
+        NotificationService().showNotification(
+            title: 'PomodoroStreak', body: 'Pomodoro session Finished');
         resetBreakTimer(); // Reset the break timer when it ends
       }
     });

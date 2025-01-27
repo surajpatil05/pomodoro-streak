@@ -1,8 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+     <!-- POST_NOTIFICATIONS permission -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
-        android:label="pomodoro_streak"
+        android:label="PomodoroStreak"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/logo">
         <activity
             android:enableOnBackInvokedCallback="true"
             android:name=".MainActivity"
