@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pomodoro_streak/data/database_helper.dart';
 
 import 'package:pomodoro_streak/screens/main_screen.dart';
+import 'package:pomodoro_streak/services/notification_service.dart';
 
 // import 'package:sqflite/sqflite.dart';
 
@@ -34,6 +36,8 @@ ThemeData themeData = ThemeData(
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  NotificationService().initNotification();
+
   List<Map<String, dynamic>> focusModeData =
       await DatabaseHelper.instance.fetchAllFocusModeData();
 
@@ -59,11 +63,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Pomodoro App',
-      theme: themeData,
-      debugShowCheckedModeBanner: false,
-      home: MainScreen(), // pomodoro application screen
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true, // Allow text to scale down
+      splitScreenMode: true, // Support split-screen mode
+      child: MaterialApp(
+        title: 'Pomodoro App',
+        theme: themeData,
+        debugShowCheckedModeBanner: false,
+        home: MainScreen(), // pomodoro application screen
+      ),
     );
   }
 }
