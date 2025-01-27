@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:pomodoro_streak/providers/break_timer_notifier.dart';
 import 'package:pomodoro_streak/providers/focus_timer_notifier.dart';
@@ -35,7 +36,7 @@ class MainScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(8.r),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -49,7 +50,7 @@ class MainScreen extends ConsumerWidget {
                   'Focus',
                   style: TextStyle(
                     color: isFocusMode ? Colors.white : Colors.grey,
-                    fontSize: 35,
+                    fontSize: 35.sp,
                   ),
                 ),
               ),
@@ -63,7 +64,7 @@ class MainScreen extends ConsumerWidget {
                   'Break',
                   style: TextStyle(
                     color: !isFocusMode ? Colors.white : Colors.grey,
-                    fontSize: 35,
+                    fontSize: 35.sp,
                   ),
                 ),
               ),
@@ -74,12 +75,12 @@ class MainScreen extends ConsumerWidget {
           // Show about dialog button when the timer is not running or paused
           if (!(timerState.isRunning || timerState.isPaused))
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
               child: IconButton(
                 icon: Icon(
                   Icons.help_outline_outlined,
                   color: Colors.white,
-                  size: 30,
+                  size: 30.sp,
                 ),
                 onPressed: () {
                   // Show the dialog when the help button is pressed
@@ -88,15 +89,15 @@ class MainScreen extends ConsumerWidget {
                     builder: (BuildContext context) {
                       return Dialog(
                         insetPadding: EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical:
-                                50), // Adds space from top to show below app bar
+                          horizontal: 15.w,
+                          vertical: 50.h,
+                        ), // Adds space from top to show below app bar
                         backgroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: EdgeInsets.all(16.r),
                           child: SingleChildScrollView(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,39 +105,39 @@ class MainScreen extends ConsumerWidget {
                                 Text(
                                   'Suggestions',
                                   style: TextStyle(
-                                    fontSize: 24,
+                                    fontSize: 24.sp,
                                     fontWeight: FontWeight.bold,
                                     color: Colors
                                         .white, // White text color for contrast
                                   ),
                                 ),
-                                SizedBox(height: 16),
+                                SizedBox(height: 16.h),
                                 Text(
                                   'Pomodoro',
                                   style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 20.sp,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white, // White text color
                                   ),
                                 ),
-                                SizedBox(height: 8),
+                                SizedBox(height: 8.h),
                                 Text(
                                   "The Pomodoro Technique helps you use your time more efficiently by breaking your work into manageable intervals. "
                                   "You focus for 25 minutes, followed by a 5-minute break. These intervals, called 'pomodoros,' repeat throughout your workday. "
                                   "The technique is simple but powerful, and when combined with a timer like Pomodoro Streak, it can significantly boost your productivity and keep you on track.",
-                                  style: TextStyle(fontSize: 16),
+                                  style: TextStyle(fontSize: 16.sp),
                                 ),
                                 SizedBox(
-                                    height:
-                                        16), // Space between Pomodoro and Meditation info
+                                  height: 16.h,
+                                ), // Space between Pomodoro and Meditation info
                                 Text(
                                   'Meditation',
                                   style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 20.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(height: 8),
+                                SizedBox(height: 8.h),
                                 Text(
                                   "Meditation has been proven to reduce stress, improve focus, and enhance overall well-being. "
                                   "It doesn’t have to be complicated—just a few minutes of mindfulness can make a big difference. "
@@ -144,9 +145,11 @@ class MainScreen extends ConsumerWidget {
                                   "1. Set the timer to 5 minutes.\n"
                                   "2. Close your eyes, take a deep breath, and relax.\n"
                                   "3. Focus on your breath and let any thoughts drift away.",
-                                  style: TextStyle(fontSize: 16),
+                                  style: TextStyle(fontSize: 16.sp),
                                 ),
-                                SizedBox(height: 16), // Space before OK button
+                                SizedBox(
+                                  height: 16.h,
+                                ), // Space before OK button
                                 Center(
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
@@ -154,7 +157,7 @@ class MainScreen extends ConsumerWidget {
                                       foregroundColor: Colors.black,
                                       overlayColor: Colors.transparent,
                                       textStyle: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 18.sp,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -181,12 +184,12 @@ class MainScreen extends ConsumerWidget {
           // Show cancel button when the timer is running or paused
           if (timerState.isRunning || timerState.isPaused)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
               child: IconButton(
                 icon: Icon(
                   Icons.cancel_outlined,
                   color: Colors.white,
-                  size: 30,
+                  size: 30.sp,
                 ),
                 onPressed: () {
                   if (isFocusMode) {

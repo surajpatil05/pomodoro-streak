@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:pomodoro_streak/providers/focus_timer_notifier.dart';
 import 'package:pomodoro_streak/providers/select_dropdown_notifier.dart';
@@ -26,17 +27,6 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
       syncWithFocusTimer(ref); // Sync dropdown with focusTimerProvider
     });
   }
-
-  // // Function to sync dropdown with focusTimerProvider when the dropdown changes
-  // void syncWithFocusTimer(WidgetRef ref) {
-  //   // Get the selected focus timeline from focusTimerProvider
-  //   final focusTimeline = ref.read(focusTimerProvider).selectedTimeline;
-
-  //   // Update the selectDropDownProvider with the focusTimeline
-  //   ref
-  //       .read(selectDropDownProvider.notifier)
-  //       .setHighlightedOption(focusTimeline);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -88,42 +78,42 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 6),
+                  padding: EdgeInsets.only(left: 6.w),
                   child: Row(
                     children: [
                       Icon(
-                        Icons.sync,
-                        size: 30,
+                        Icons.whatshot_sharp,
+                        size: 30.sp,
                         color: Colors.orange,
                       ),
-                      SizedBox(width: 4),
+                      SizedBox(width: 4.w),
                       Text(
                         timerState.getCyclesCount().toString(),
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18.sp),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: 4.h),
                 Padding(
-                  padding: const EdgeInsets.only(left: 12),
+                  padding: EdgeInsets.only(left: 12.w),
                   child: Row(
                     children: [
                       Text(
                         'Cycles',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      SizedBox(height: 38),
+                      SizedBox(height: 38.h),
                     ],
                   ),
                 ),
-                SizedBox(height: 1),
+                SizedBox(height: 1.h),
               ],
             ),
-            SizedBox(width: 40),
+            SizedBox(width: 40.w),
 
             // Right Column: Time text (0h 0min) and DropdownButton
             Column(
@@ -134,20 +124,20 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                   children: [
                     Icon(
                       Icons.watch_later_outlined,
-                      size: 30,
+                      size: 30.sp,
                     ),
-                    SizedBox(width: 4),
+                    SizedBox(width: 4.w),
                     Text(
                       timerState
                           .formatTimeSpent(), // display timeline time in hours and minutes
 
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                          fontSize: 18.sp, fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 22),
+                  padding: EdgeInsets.only(left: 22.w),
                   child: Row(
                     children: [
                       Text(
@@ -162,7 +152,7 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                               context, ref); // show the bottom sheet
                         },
                         icon: Icon(Icons.expand_more),
-                        iconSize: 30,
+                        iconSize: 30.sp,
                         color: Colors.white,
                       ),
                     ],
@@ -173,13 +163,13 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
           ],
         ),
 
-        SizedBox(height: 50),
+        SizedBox(height: 50.h),
 
         // Timer Display
         Text(
           formatTime(timerState.focusTime),
           style: TextStyle(
-            fontSize: 70,
+            fontSize: 70.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -190,8 +180,7 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
           children: [5, 15, 25, 60].map((time) {
             final isSelected = timerState.defaultFocusTimeOption == time;
             return Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 4.0, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 10.h),
               child: InkWell(
                 onTap: timerState.isRunning ||
                         timerState.focusTime <
@@ -202,7 +191,7 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                       },
                 child: Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? Colors.white
@@ -213,7 +202,7 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                     time.toString().padLeft(2, '0'),
                     style: TextStyle(
                       color: isSelected ? Colors.black : Colors.white,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -223,24 +212,24 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
           }).toList(),
         ),
 
-        SizedBox(height: 60),
+        SizedBox(height: 60.h),
 
         // // Sound Dropdown FEATURE push in next update
         // Container(
-        //   height: 45,
-        //   width: 200,
+        //   height: 45.h,
+        //   width: 200.w,
         //   decoration: BoxDecoration(
         //     color: const Color.fromARGB(255, 57, 57, 57),
-        //     borderRadius: BorderRadius.circular(10),
+        //     borderRadius: BorderRadius.circular(10.r),
         //   ),
         //   child: Row(
         //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
         //     children: [
         //       Padding(
-        //         padding: const EdgeInsets.all(8.0),
+        //         padding: const EdgeInsets.all(8.r),
         //         child: Text(
         //           'Sound',
-        //           style: TextStyle(fontSize: 16),
+        //           style: TextStyle(fontSize: 16.sp),
         //         ),
         //       ),
         //       DropdownButton<String>(
@@ -265,7 +254,7 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
         //   ),
         // ),
 
-        SizedBox(height: 100),
+        SizedBox(height: 100.h),
 
         // Start Button
         if (!timerState.isRunning &&
@@ -277,9 +266,9 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
               textStyle:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
             ),
             child: Transform.scale(
               scale: 1.3,
@@ -294,11 +283,11 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
               focusTimerNotifier.pauseFocusTimer();
             },
             style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.white, width: 2), // white border
+              side: BorderSide(color: Colors.white, width: 2.w), // white border
               backgroundColor: Colors.black,
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
               textStyle:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
             ),
             child: Transform.scale(
               scale: 1.3,
@@ -317,9 +306,9 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 15.h),
               textStyle:
-                  const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
             ),
             child: Transform.scale(
               scale: 1.3,
