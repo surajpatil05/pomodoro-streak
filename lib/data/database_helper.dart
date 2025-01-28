@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:sqflite/sqflite.dart';
+
 import 'package:path/path.dart';
 
 class DatabaseHelper {
@@ -27,22 +29,22 @@ class DatabaseHelper {
   Future _onCreate(Database db, int version) async {
     debugPrint('database tables created Successfully');
     await db.execute('''
-      CREATE TABLE focus_mode (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        cycle_count INTEGER,
-        time_spent INTEGER,
-        timestamp TEXT
-      )
-    ''');
+        CREATE TABLE focus_mode (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          cycle_count INTEGER,
+          time_spent INTEGER,
+          timestamp TEXT
+        )
+      ''');
 
     await db.execute('''
-      CREATE TABLE break_mode (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        cycle_count INTEGER,
-        time_spent INTEGER,
-        timestamp TEXT
-      )
-    ''');
+        CREATE TABLE break_mode (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          cycle_count INTEGER,
+          time_spent INTEGER,
+          timestamp TEXT
+        )
+      ''');
     debugPrint('Tables created Successfully');
   }
 
@@ -57,12 +59,16 @@ class DatabaseHelper {
       int cycleCount, int timeSpent, DateTime dateTime) async {
     final db = await instance.database;
     debugPrint(
-        'Inserting into focus_mode: $cycleCount, $timeSpent, $dateTime.toIso8601String()');
-    return await db.insert('focus_mode', {
-      'cycle_count': cycleCount,
-      'time_spent': timeSpent,
-      'timestamp': dateTime.toIso8601String(),
-    });
+        'Inserting into focus_mode: $cycleCount, $timeSpent, ${dateTime.toIso8601String()}');
+    return await db.insert(
+      'focus_mode',
+      {
+        'cycle_count': cycleCount,
+        'time_spent': timeSpent,
+        'timestamp': dateTime.toIso8601String(),
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace, // Prevent duplicates
+    );
   }
 
   // Insert data in Break Mode table
@@ -71,12 +77,16 @@ class DatabaseHelper {
     final db = await instance.database;
 
     debugPrint(
-        'Inserting into break_mode: $cycleCount, $timeSpent, $dateTime.toIso8601String()');
-    return await db.insert('break_mode', {
-      'cycle_count': cycleCount,
-      'time_spent': timeSpent,
-      'timestamp': dateTime.toIso8601String(),
-    });
+        'Inserting into break_mode: $cycleCount, $timeSpent, ${dateTime.toIso8601String()}');
+    return await db.insert(
+      'break_mode',
+      {
+        'cycle_count': cycleCount,
+        'time_spent': timeSpent,
+        'timestamp': dateTime.toIso8601String(),
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace, // Prevent duplicates
+    );
   }
 
   // Get and Display (Cycle Count and Time Spent) for the selected timeline from focus_mode table to display in Focus Mode Screen
@@ -90,7 +100,8 @@ class DatabaseHelper {
           "SELECT * FROM focus_mode WHERE date(timestamp, 'localtime') = date('now', 'localtime')";
     } else if (timeline == 'This Week') {
       query =
-          "SELECT * FROM focus_mode WHERE strftime('%W', timestamp, 'localtime') = strftime('%W', 'now', 'localtime')";
+          // "SELECT * FROM focus_mode WHERE strftime('%Y-%W', timestamp, 'localtime') = strftime('%Y-%W', 'now', 'localtime')";
+          "SELECT * FROM focus_mode WHERE date(timestamp, 'localtime') BETWEEN date('now', 'weekday 0', '-6 days') AND date('now', 'weekday 0')";
     } else if (timeline == 'This Month') {
       query =
           "SELECT * FROM focus_mode WHERE strftime('%Y-%m', timestamp, 'localtime') = strftime('%Y-%m', 'now', 'localtime')";
@@ -110,10 +121,11 @@ class DatabaseHelper {
     if (timeline == 'Today') {
       query =
           "SELECT * FROM break_mode WHERE date(timestamp, 'localtime') = date('now', 'localtime')";
-    } else if (timeline == 'This_Week') {
+    } else if (timeline == 'This Week') {
       query =
-          "SELECT * FROM break_mode WHERE strftime('%W', timestamp, 'localtime') = strftime('%W', 'now', 'localtime')";
-    } else if (timeline == 'This_Month') {
+          // "SELECT * FROM break_mode WHERE strftime('%W', timestamp, 'localtime') = strftime('%W', 'now', 'localtime')";
+          "SELECT * FROM break_mode WHERE date(timestamp, 'localtime') BETWEEN date('now', 'weekday 0', '-6 days') AND date('now', 'weekday 0')";
+    } else if (timeline == 'This Month') {
       query =
           "SELECT * FROM break_mode WHERE strftime('%Y-%m', timestamp, 'localtime') = strftime('%Y-%m', 'now', 'localtime')";
     } else {

@@ -22,12 +22,13 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
 
     // Synchronize the dropdown value with focusTimerProvider after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(breakTimerProvider.notifier).fetchBreakModeData('Today');
+      final defaultTimeline = ref.read(breakTimerProvider).selectedTimeline;
+      ref.read(breakTimerProvider.notifier).fetchBreakModeData(defaultTimeline);
       syncWithBreakTimer(ref); // Sync dropdown with focusTimerProvider
     });
   }
 
-  // Synchronize the dropdown value with focusTimerProvider after the widget is built
+  // Sync function to update the dropdown state with breakTimerProvider
   void syncWithBreakTimer(WidgetRef ref) {
     // Get the selected focus timeline from focusTimerProvider
     final breakTimeline = ref.read(breakTimerProvider).selectedTimeline;
@@ -40,6 +41,25 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // // Listen for changes in breakTimerProvider and update selectDropDownProvider
+    // ref.listen(breakTimerProvider, (_, selectedOption) async {
+    //   final breakTimeline = selectedOption.selectedTimeline;
+
+    //   // Update selectDropDownProvider if the selected timeline has changed
+    //   if (ref.read(selectDropDownProvider) != breakTimeline) {
+    //     debugPrint('Selected option changed to: $breakTimeline');
+
+    //     ref
+    //         .read(selectDropDownProvider.notifier)
+    //         .setHighlightedOption(breakTimeline);
+
+    //     // Fetch and update data for the selected timeline
+    //     await ref
+    //         .read(breakTimerProvider.notifier)
+    //         .fetchBreakModeData(breakTimeline);
+    //   }
+    // });
+
     // Provider to update the timeSpent and cyclesCount values
     final timerState = ref.watch(breakTimerProvider);
 

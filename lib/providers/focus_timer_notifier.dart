@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_streak/data/database_helper.dart';
 
@@ -45,9 +46,9 @@ class FocusTimerNotifier extends Notifier<TimerState> {
       } else {
         timer.cancel();
         completeFocusPomodoroSession(); // Update cycle and time spent
+        resetFocusTimer(); // Reset the timer when it ends
         NotificationService().showNotification(
             title: 'PomodoroStreak', body: 'Pomodoro session Finished');
-        resetFocusTimer(); // Reset the timer when it ends
       }
     });
     state = state.copyWith(isRunning: true);
@@ -128,6 +129,7 @@ class FocusTimerNotifier extends Notifier<TimerState> {
   Future<void> fetchFocusModeData(String timeline) async {
     final result =
         await _databaseHelper.fetchFocusCycleCountAndTimeSpentByRange(timeline);
+    debugPrint('Fetched data for $timeline: $result');
 
     int cycleCount = 0;
     int timeSpent = 0;
@@ -167,10 +169,10 @@ class FocusTimerNotifier extends Notifier<TimerState> {
   }
 
   // Update the selected timeline in the state
-  void updateSelectedTimeline(String timeline) {
+  Future<void> updateSelectedTimeline(String timeline) async {
     state = state.copyWith(selectedTimeline: timeline);
 
-    fetchFocusModeData(
+    await fetchFocusModeData(
         timeline); // Fetch and update data for the new selected timeline from the bottomsheet
   }
 }

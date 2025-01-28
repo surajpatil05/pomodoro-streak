@@ -30,7 +30,7 @@ ThemeData themeData = ThemeData(
 
 //   // Delete the database
 //   await deleteDatabase(path);
-//   print('Database deleted successfully');
+//   debugPrint('Database deleted successfully');
 // }
 
 void main() async {

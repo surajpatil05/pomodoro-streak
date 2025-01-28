@@ -23,9 +23,21 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
     // Synchronize the dropdown value with focusTimerProvider after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final defaultTimeline = ref.read(focusTimerProvider).selectedTimeline;
+      debugPrint('Fetching data for: $defaultTimeline');
       ref.read(focusTimerProvider.notifier).fetchFocusModeData(defaultTimeline);
       syncWithFocusTimer(ref); // Sync dropdown with focusTimerProvider
     });
+  }
+
+  // Sync function to update the dropdown state with focusTimerProvider
+  void syncWithFocusTimer(WidgetRef ref) {
+    // Get the selected focus timeline from focusTimerProvider
+    final focusTimeline = ref.read(focusTimerProvider).selectedTimeline;
+
+    // Update the selectDropDownProvider with the focusTimeline
+    ref
+        .read(selectDropDownProvider.notifier)
+        .setHighlightedOption(focusTimeline);
   }
 
   @override
@@ -88,7 +100,9 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        timerState.getCyclesCount().toString(),
+                        timerState
+                            .getCyclesCount()
+                            .toString(), // display timeline time in hours and minutes
                         style: TextStyle(fontSize: 18.sp),
                       ),
                     ],

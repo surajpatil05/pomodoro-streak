@@ -44,9 +44,9 @@ class BreakTimerNotifier extends Notifier<TimerState> {
       } else {
         timer.cancel();
         completeBreakPomodoroSession(); // Update cycle and time spent
+        resetBreakTimer(); // Reset the break timer when it ends
         NotificationService().showNotification(
             title: 'PomodoroStreak', body: 'Pomodoro session Finished');
-        resetBreakTimer(); // Reset the break timer when it ends
       }
     });
     state = state.copyWith(isRunning: true);
@@ -165,10 +165,10 @@ class BreakTimerNotifier extends Notifier<TimerState> {
   }
 
   // Update the selected timeline in the state
-  void updateSelectedTimeline(String timeline) {
+  Future<void> updateSelectedTimeline(String timeline) async {
     state = state.copyWith(selectedTimeline: timeline);
 
-    fetchBreakModeData(
+    await fetchBreakModeData(
         timeline); // Fetch and update data for the new selected from bottomsheet timeline
   }
 }
