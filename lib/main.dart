@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -54,6 +56,11 @@ void main() async {
   // Delete the database (for testing or development purposes)
   // await deleteDatabaseFile();
 
+  // all debugPrint are ignored in production build
+  if (kReleaseMode) {
+    debugPrint = (String? message, {int? wrapWidth}) {};
+  }
+
   runApp(
     ProviderScope(
       child: const MyApp(),
@@ -78,7 +85,7 @@ class _MyAppState extends State<MyApp> {
   // Initialize the splash screen in app starting and remove after 3 seconds duration
   void initSplashScreen() async {
     debugPrint('pausing splash screen ...');
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
     debugPrint('unpausing splash screen ...');
     FlutterNativeSplash.remove();
   }
