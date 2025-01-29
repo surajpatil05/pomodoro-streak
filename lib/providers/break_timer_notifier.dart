@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomodoro_streak/data/database_helper.dart';
 
@@ -126,6 +127,7 @@ class BreakTimerNotifier extends Notifier<TimerState> {
   Future<void> fetchBreakModeData(String timeline) async {
     final result =
         await _databaseHelper.fetchBreakCycleCountAndTimeSpentByRange(timeline);
+    debugPrint('Fetched break data for $timeline: $result');
 
     int cycleCount = 0;
     int timeSpent = 0;

@@ -129,7 +129,7 @@ class FocusTimerNotifier extends Notifier<TimerState> {
   Future<void> fetchFocusModeData(String timeline) async {
     final result =
         await _databaseHelper.fetchFocusCycleCountAndTimeSpentByRange(timeline);
-    debugPrint('Fetched data for $timeline: $result');
+    debugPrint('Fetched Focus data for $timeline: $result');
 
     int cycleCount = 0;
     int timeSpent = 0;
