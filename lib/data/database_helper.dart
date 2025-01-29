@@ -97,17 +97,16 @@ class DatabaseHelper {
     String query;
     if (timeline == 'Today') {
       query =
-          "SELECT * FROM focus_mode WHERE date(timestamp, 'localtime') = date('now', 'localtime')";
+          "SELECT * FROM focus_mode WHERE date(datetime(timestamp, 'utc'), 'localtime') = date('now', 'localtime')";
     } else if (timeline == 'This Week') {
       query =
-          // "SELECT * FROM focus_mode WHERE strftime('%Y-%W', timestamp, 'localtime') = strftime('%Y-%W', 'now', 'localtime')";
-          "SELECT * FROM focus_mode WHERE date(timestamp, 'localtime') BETWEEN date('now', 'weekday 0', '-6 days') AND date('now', 'weekday 0')";
+          "SELECT * FROM focus_mode WHERE date(datetime(timestamp, 'utc'), 'localtime') BETWEEN date('now', 'weekday 1', '-7 days', 'localtime') AND date('now', 'weekday 0', 'localtime')";
     } else if (timeline == 'This Month') {
       query =
-          "SELECT * FROM focus_mode WHERE strftime('%Y-%m', timestamp, 'localtime') = strftime('%Y-%m', 'now', 'localtime')";
+          "SELECT * FROM focus_mode WHERE strftime('%Y-%m', datetime(timestamp, 'utc'), 'localtime') = strftime('%Y-%m', 'now', 'localtime')";
     } else {
       query =
-          "SELECT * FROM focus_mode WHERE strftime('%Y', timestamp, 'localtime') = strftime('%Y', 'now', 'localtime')"; // Total time, all records
+          "SELECT * FROM focus_mode WHERE strftime('%Y', datetime(timestamp, 'utc'), 'localtime') = strftime('%Y', 'now', 'localtime')";
     }
     return await db.rawQuery(query);
   }
@@ -120,17 +119,16 @@ class DatabaseHelper {
     String query;
     if (timeline == 'Today') {
       query =
-          "SELECT * FROM break_mode WHERE date(timestamp, 'localtime') = date('now', 'localtime')";
+          "SELECT * FROM break_mode WHERE date(datetime(timestamp, 'utc'), 'localtime') = date('now', 'localtime')";
     } else if (timeline == 'This Week') {
       query =
-          // "SELECT * FROM break_mode WHERE strftime('%W', timestamp, 'localtime') = strftime('%W', 'now', 'localtime')";
-          "SELECT * FROM break_mode WHERE date(timestamp, 'localtime') BETWEEN date('now', 'weekday 0', '-6 days') AND date('now', 'weekday 0')";
+          "SELECT * FROM break_mode WHERE date(datetime(timestamp, 'utc'), 'localtime') BETWEEN date('now', 'weekday 1', '-7 days', 'localtime') AND date('now', 'weekday 0', 'localtime')";
     } else if (timeline == 'This Month') {
       query =
-          "SELECT * FROM break_mode WHERE strftime('%Y-%m', timestamp, 'localtime') = strftime('%Y-%m', 'now', 'localtime')";
+          "SELECT * FROM break_mode WHERE strftime('%Y-%m', datetime(timestamp, 'utc'), 'localtime') = strftime('%Y-%m', 'now', 'localtime')";
     } else {
       query =
-          "SELECT * FROM break_mode WHERE strftime('%Y', timestamp, 'localtime') = strftime('%Y', 'now', 'localtime')"; // Total time, all records
+          "SELECT * FROM break_mode WHERE strftime('%Y', datetime(timestamp, 'utc'), 'localtime') = strftime('%Y', 'now', 'localtime')";
     }
     return await db.rawQuery(query);
   }
