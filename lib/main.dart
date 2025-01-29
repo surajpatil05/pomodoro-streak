@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pomodoro_streak/data/database_helper.dart';
 
 import 'package:pomodoro_streak/screens/main_screen.dart';
+import 'package:pomodoro_streak/data/database_helper.dart';
 import 'package:pomodoro_streak/services/notification_service.dart';
 
 // import 'package:sqflite/sqflite.dart';
@@ -34,7 +37,8 @@ ThemeData themeData = ThemeData(
 // }
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   NotificationService().initNotification();
 
@@ -57,8 +61,27 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    initSplashScreen();
+  }
+
+  // Initialize the splash screen in app starting and remove after 3 seconds duration
+  void initSplashScreen() async {
+    debugPrint('pausing splash screen ...');
+    await Future.delayed(Duration(seconds: 2));
+    debugPrint('unpausing splash screen ...');
+    FlutterNativeSplash.remove();
+  }
 
   // This widget is the root of your application.
   @override
