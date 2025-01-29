@@ -1,6 +1,8 @@
 // selected_timeline_option_notifier.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pomodoro_streak/providers/break_timer_notifier.dart';
+import 'package:pomodoro_streak/providers/focus_timer_notifier.dart';
 
 class SelectDropDownNotifier extends Notifier<String> {
   SelectDropDownNotifier({required String initialOption})
@@ -37,3 +39,15 @@ final selectDropDownProvider = NotifierProvider<SelectDropDownNotifier, String>(
     initialOption: 'Today', // Default value for initialization
   ),
 );
+
+// Sync function to update the dropdown state with focusTimerProvider
+void syncWithFocusTimer(WidgetRef ref) {
+  final focusTimeline = ref.read(focusTimerProvider).selectedTimeline;
+  ref.read(selectDropDownProvider.notifier).setHighlightedOption(focusTimeline);
+}
+
+// Sync function to update the dropdown state with breakTimerProvider
+void syncWithBreakTimer(WidgetRef ref) {
+  final breakTimeline = ref.read(breakTimerProvider).selectedTimeline;
+  ref.read(selectDropDownProvider.notifier).setHighlightedOption(breakTimeline);
+}

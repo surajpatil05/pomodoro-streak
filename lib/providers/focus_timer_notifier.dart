@@ -46,9 +46,9 @@ class FocusTimerNotifier extends Notifier<TimerState> {
       } else {
         timer.cancel();
         completeFocusPomodoroSession(); // Update cycle and time spent
-        resetFocusTimer(); // Reset the timer when it ends
         NotificationService().showNotification(
             title: 'PomodoroStreak', body: 'Pomodoro session Finished');
+        resetFocusTimer(); // Reset the timer when it ends
       }
     });
     state = state.copyWith(isRunning: true);
