@@ -22,9 +22,13 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
 
     // Synchronize the dropdown value with focusTimerProvider after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final defaultTimeline = ref.read(breakTimerProvider).selectedTimeline;
-      ref.read(breakTimerProvider.notifier).fetchBreakModeData(defaultTimeline);
-      syncWithBreakTimer(ref); // Sync dropdown with focusTimerProvider
+      if (mounted) {
+        final defaultTimeline = ref.read(breakTimerProvider).selectedTimeline;
+        ref
+            .read(breakTimerProvider.notifier)
+            .fetchBreakModeData(defaultTimeline);
+        syncWithBreakTimer(ref); // Sync dropdown with focusTimerProvider
+      }
     });
   }
 

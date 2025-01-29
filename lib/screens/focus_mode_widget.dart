@@ -22,9 +22,13 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
 
     // Synchronize the dropdown value with focusTimerProvider after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final defaultTimeline = ref.read(focusTimerProvider).selectedTimeline;
-      ref.read(focusTimerProvider.notifier).fetchFocusModeData(defaultTimeline);
-      syncWithFocusTimer(ref); // Sync dropdown with focusTimerProvider
+      if (mounted) {
+        final defaultTimeline = ref.read(focusTimerProvider).selectedTimeline;
+        ref
+            .read(focusTimerProvider.notifier)
+            .fetchFocusModeData(defaultTimeline);
+        syncWithFocusTimer(ref); // Sync dropdown with focusTimerProvider
+      }
     });
   }
 
