@@ -28,38 +28,8 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
     });
   }
 
-  // Sync function to update the dropdown state with breakTimerProvider
-  void syncWithBreakTimer(WidgetRef ref) {
-    // Get the selected focus timeline from focusTimerProvider
-    final breakTimeline = ref.read(breakTimerProvider).selectedTimeline;
-
-    // Update the selectDropDownProvider with the focusTimeline
-    ref
-        .read(selectDropDownProvider.notifier)
-        .setHighlightedOption(breakTimeline);
-  }
-
   @override
   Widget build(BuildContext context) {
-    // // Listen for changes in breakTimerProvider and update selectDropDownProvider
-    // ref.listen(breakTimerProvider, (_, selectedOption) async {
-    //   final breakTimeline = selectedOption.selectedTimeline;
-
-    //   // Update selectDropDownProvider if the selected timeline has changed
-    //   if (ref.read(selectDropDownProvider) != breakTimeline) {
-    //     debugPrint('Selected option changed to: $breakTimeline');
-
-    //     ref
-    //         .read(selectDropDownProvider.notifier)
-    //         .setHighlightedOption(breakTimeline);
-
-    //     // Fetch and update data for the selected timeline
-    //     await ref
-    //         .read(breakTimerProvider.notifier)
-    //         .fetchBreakModeData(breakTimeline);
-    //   }
-    // });
-
     // Provider to update the timeSpent and cyclesCount values
     final timerState = ref.watch(breakTimerProvider);
 
@@ -80,82 +50,86 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // Top Row
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Left Column: Fire icon, 0 text, and Cycles text
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 6.w),
-                  child: Row(
+        Padding(
+          padding: EdgeInsets.all(20.r),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Left Column: Fire icon, 0 text, and Cycles text
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 6.r),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.whatshot_sharp,
+                          size: 30.sp,
+                          color: Colors.orange,
+                        ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          timerState
+                              .getCyclesCount()
+                              .toString(), // display timeline time in hours and minutes
+                          style: TextStyle(fontSize: 18.sp),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Padding(
+                    padding: EdgeInsets.only(left: 12.r),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Streak',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 38.h),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 1.h),
+                ],
+              ),
+              SizedBox(width: 40.w),
+
+              // Right Column: Time text (0h 0min) and DropdownButton
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
                     children: [
                       Icon(
-                        Icons.whatshot_sharp,
+                        Icons.watch_later_outlined,
                         size: 30.sp,
-                        color: Colors.orange,
                       ),
                       SizedBox(width: 4.w),
                       Text(
                         timerState
-                            .getCyclesCount()
-                            .toString(), // display timeline time in hours and minutes
-                        style: TextStyle(fontSize: 18.sp),
+                            .formatTimeSpent(), // display timeline time in hours and minutes
+                        style: TextStyle(
+                            fontSize: 18.sp, fontWeight: FontWeight.w700),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(height: 4.h),
-                Padding(
-                  padding: EdgeInsets.only(left: 12.w),
-                  child: Row(
+                  Row(
                     children: [
-                      Text(
-                        'Cycles',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 38.h),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 1.h),
-              ],
-            ),
-            SizedBox(width: 40.w),
-
-            // Right Column: Time text (0h 0min) and DropdownButton
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.watch_later_outlined,
-                      size: 30.sp,
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      timerState
-                          .formatTimeSpent(), // display timeline time in hours and minutes
-                      style: TextStyle(
-                          fontSize: 18.sp, fontWeight: FontWeight.w700),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 22.w),
-                  child: Row(
-                    children: [
-                      Text(
-                        selectedBreakTimeline, // display selected timeline
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
+                      Container(
+                        width: 71.w,
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          selectedBreakTimeline, // display selected timeline
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                       IconButton(
@@ -169,10 +143,10 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
 
         SizedBox(height: 50),
