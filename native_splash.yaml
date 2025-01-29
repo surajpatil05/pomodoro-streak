@@ -1,0 +1,14 @@
+# use the command below in terminal to apply the changes of this fil
+# dart run flutter_native_splash:create --path=native_splash.yaml
+
+flutter_native_splash:
+  android: true
+  ios: false
+  web: false
+  color: "#000000"
+
+  android_12: 
+    # Splash screen background color.
+    color: "#000000"
+    image: "assets/logo_android_standards.png"
+    branding: "assets/logo_name.png"

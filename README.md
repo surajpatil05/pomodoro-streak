@@ -84,3 +84,9 @@ flutter pub get
 - [ ] Screen Always on while Timer is Running
 - [ ] Display Pomodoro remaining Timer on LockScreen While Running
 - [ ] different sounds to select from to play after Timer duration Completes
+- [ ] haptics on start, pause, stop, focus, break, information buttons
+- [ ] dark and light theme button to toggle
+- [ ] add some glitter or crackers effect to it after the timer finishes or   background screen should blink with diff colours 
+- [ ] when timer reaches 10 sec it should pop with diff colours and change big small
+- [ ] a small card to flex your productivity when you created a good streak
+- [ ] daily reminder to use pomodoro timer
