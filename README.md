@@ -90,3 +90,4 @@ flutter pub get
 - [ ] when timer reaches 10 sec it should pop with diff colours and change big small
 - [ ] a small card to flex your productivity when you created a good streak
 - [ ] daily reminder to use pomodoro timer
+- [ ] when user taps on start button a beep sound should be played to indicate that the timer is running
