@@ -14,9 +14,12 @@
 - Information about the Pomodoro Technique.
 
 ## Screenshots
-<img src="./FocusMode_Screenshot.png" alt="Focus Mode" width="50%"/>
-<img src="./BreakMode_Screenshot.png" alt="Break Mode" width="50%"/>
-<img src="./info_Screenshot.png" alt="information dialogue" width="50%"/>
+<img src="./FocusMode_Screenshot_Mobile.png" alt="Focus Mode" width="50%"/>
+<img src="./BreakMode_Screenshot_Mobile.png" alt="Break Mode" width="50%"/>
+<img src="./info_Screenshot_Mobile.png" alt="information dialogue" width="50%"/>
+<img src="./FocusMode_Screenshot_Tablet.png" alt="Focus Mode" width="50%"/>
+<img src="./BreakMode_Screenshot_Tablet.png" alt="Break Mode" width="50%"/>
+<img src="./info_Screenshot_Tablet.png" alt="information dialogue" width="50%"/>
 
 ## Installation
 1. Clone the repository:
@@ -81,6 +84,7 @@ flutter pub get
 
 
 ## Features to be added in future versions
+- [ ] Table device support
 - [ ] Screen Always on while Timer is Running
 - [ ] Display Pomodoro remaining Timer on LockScreen While Running
 - [ ] different sounds to select from to play after Timer duration Completes
@@ -91,3 +95,6 @@ flutter pub get
 - [ ] a small card to flex your productivity when you created a good streak
 - [ ] daily reminder to use pomodoro timer
 - [ ] when user taps on start button a beep sound should be played to indicate that the timer is running
+- [ ] show in_app_review popup when user use app for sometime use some launch times to display the review popup after a week or so
+- [ ] add app version and build number in the bottom of the app to let user know which version they are on.
+
