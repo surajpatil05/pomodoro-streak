@@ -13,13 +13,15 @@
 - Minimalistic Dark Theme
 - Information about the Pomodoro Technique.
 
-## Screenshots
+## Mobile Screenshots
 <img src="./FocusMode_Screenshot_Mobile.png" alt="Focus Mode" width="50%"/>
 <img src="./BreakMode_Screenshot_Mobile.png" alt="Break Mode" width="50%"/>
-<img src="./info_Screenshot_Mobile.png" alt="information dialogue" width="50%"/>
+<img src="./infoScreen_Screenshot_Mobile.png" alt="information dialogue" width="50%"/>
+
+## Tablet Screenshots
 <img src="./FocusMode_Screenshot_Tablet.png" alt="Focus Mode" width="50%"/>
 <img src="./BreakMode_Screenshot_Tablet.png" alt="Break Mode" width="50%"/>
-<img src="./info_Screenshot_Tablet.png" alt="information dialogue" width="50%"/>
+<img src="./infoScreen_Screenshot_Tablet.png" alt="information dialogue" width="50%"/>
 
 ## Installation
 1. Clone the repository:
