@@ -137,7 +137,7 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> fetchAllFocusModeData() async {
     final db = await instance.database;
 
-    final result = db.rawQuery("SELECT * FROM focus_mode");
+    final result = await db.rawQuery("SELECT * FROM focus_mode");
 
     return result;
   }
@@ -146,7 +146,7 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> fetchAllBreakModeData() async {
     final db = await instance.database;
 
-    final result = db.rawQuery("SELECT * FROM break_mode");
+    final result = await db.rawQuery("SELECT * FROM break_mode");
 
     return result;
   }
