@@ -137,26 +137,6 @@ class BreakTimerNotifier extends Notifier<TimerState> {
     );
   }
 
-  // // Switch to focus mode
-  // void toggleBreakMode() {
-  //   // Prevent switching modes if the timer is running or paused
-  //   if (state.isRunning || state.isPaused) {
-  //     return;
-  //   }
-
-  //   // Cancel the current break timer
-  //   _timer?.cancel();
-
-  //   // Switch to focus timer
-  //   state = state.copyWith(
-  //     isFocusMode: true,
-  //     isRunning: false,
-  //     isPaused: false,
-  //     focusTime: state.defaultFocusTimeOption * 60, // Reset focus time properly
-  //     breakTime: state.defaultBreakTimeOption * 60, // Reset break time
-  //   );
-  // }
-
   // Updates the break time option with the current break time from [01, 05, 15, 30] min
   void updateBreakTimeOption(int timeInMinutes) {
     state = state.copyWith(
