@@ -6,6 +6,7 @@ class TimerState {
   final int breakTime; // Break mode time
   final bool isRunning;
   final bool isPaused;
+  final bool isStarting;
   final bool isFocusMode;
   final int defaultFocusTimeOption; // Selected Focus time option
   final int defaultBreakTimeOption; // Selected Break time option
@@ -23,6 +24,7 @@ class TimerState {
     required this.focusTime,
     required this.breakTime,
     required this.isRunning,
+    this.isStarting = false,
     required this.isFocusMode,
     required this.defaultFocusTimeOption,
     required this.defaultBreakTimeOption,
@@ -43,6 +45,7 @@ class TimerState {
     int? breakTime,
     bool? isRunning,
     bool? isPaused,
+    bool? isStarting,
     bool? isFocusMode,
     int? selectedFocusTimeOption,
     int? selectedBreakTimeOption,
@@ -61,6 +64,7 @@ class TimerState {
       breakTime: breakTime ?? this.breakTime,
       isRunning: isRunning ?? this.isRunning,
       isPaused: isPaused ?? this.isPaused,
+      isStarting: isStarting ?? this.isStarting,
       isFocusMode: isFocusMode ?? this.isFocusMode,
       defaultFocusTimeOption: selectedFocusTimeOption ?? defaultFocusTimeOption,
       defaultBreakTimeOption: selectedBreakTimeOption ?? defaultBreakTimeOption,
