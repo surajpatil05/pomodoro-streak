@@ -75,12 +75,12 @@ class MainScreen extends ConsumerWidget {
           // Show about dialog button when the timer is not running or paused
           if (!(timerState.isRunning || timerState.isPaused))
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: IconButton(
                 icon: Icon(
                   Icons.help_outline_outlined,
                   color: Colors.white,
-                  size: 30.sp,
+                  size: 25.sp,
                 ),
                 onPressed: () {
                   // Show the dialog when the help button is pressed
@@ -182,16 +182,17 @@ class MainScreen extends ConsumerWidget {
             ),
 
           // Show cancel button when the timer is running or paused
-          if (timerState.isRunning || timerState.isPaused)
+          if ((timerState.isRunning || timerState.isPaused) &&
+              !timerState.isStarting)
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: IconButton(
                 icon: Icon(
                   Icons.cancel_outlined,
                   color: Colors.white,
-                  size: 30.sp,
+                  size: 25.sp,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (isFocusMode) {
                     (timerNotifier as FocusTimerNotifier)
                         .resetFocusTimer(); // reset focus timer
@@ -204,7 +205,22 @@ class MainScreen extends ConsumerWidget {
             ),
         ],
       ),
-      body: isFocusMode ? const FocusModeWidget() : const BreakModeWidget(),
+      // body: isFocusMode ? const FocusModeWidget() : const BreakModeWidget(),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth > 600) {
+            // For larger screens (like tablets), display the widget based on the current mode.
+            return isFocusMode
+                ? const FocusModeWidget()
+                : const BreakModeWidget();
+          } else {
+            // For smaller screens (mobile), display the widget based on the current mode.
+            return isFocusMode
+                ? const FocusModeWidget()
+                : const BreakModeWidget();
+          }
+        },
+      ),
     );
   }
 }

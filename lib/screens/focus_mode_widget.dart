@@ -20,13 +20,13 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
   void initState() {
     super.initState();
 
-    // Synchronize the dropdown value with focusTimerProvider after the widget is built
+    // Ensure ref is used inside addPostFrameCallback to avoid early access
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
+        final focusTimerNotifier = ref.read(focusTimerProvider.notifier);
         final defaultTimeline = ref.read(focusTimerProvider).selectedTimeline;
-        ref
-            .read(focusTimerProvider.notifier)
-            .fetchFocusModeData(defaultTimeline);
+
+        focusTimerNotifier.fetchFocusModeData(defaultTimeline);
         syncWithFocusTimer(ref); // Sync dropdown with focusTimerProvider
       }
     });
@@ -131,10 +131,12 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        width: 71.w,
-                        alignment: Alignment.centerRight,
+                        width: 70.w,
+                        alignment: Alignment.bottomRight,
                         child: Text(
                           selectedFocusTimeline, // display selected timeline
+                          softWrap: true,
+                          textAlign: TextAlign.right,
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                           ),
@@ -250,9 +252,11 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
 
         SizedBox(height: 100.h),
 
-        // Start Button
+        // Show Start button only if timer is not running, not starting, and not paused.
         if (!timerState.isRunning &&
-            timerState.focusTime == timerState.defaultFocusTimeOption * 60)
+            timerState.focusTime == timerState.defaultFocusTimeOption * 60 &&
+            !timerState.isStarting &&
+            !timerState.isPaused)
           ElevatedButton(
             onPressed: () {
               focusTimerNotifier.startFocusTimer();
@@ -269,9 +273,11 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
               child: const Text('START'),
             ),
           ),
-
-        // Pause Button
-        if (timerState.isRunning && !timerState.isPaused)
+        // Show the Pause button only if the timer is running, is Starting, and not in paused state.
+        if ((timerState.isStarting || timerState.isRunning) &&
+            (!timerState.isPaused ||
+                timerState.focusTime <=
+                    (timerState.defaultFocusTimeOption * 60)))
           ElevatedButton(
             onPressed: () {
               focusTimerNotifier.pauseFocusTimer();
@@ -285,14 +291,14 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
             ),
             child: Transform.scale(
               scale: 1.3,
-              child: const Text('PAUSE'),
+              child: Text('PAUSE'),
             ),
           ),
 
-        // Resume Button
-        if (!timerState.isRunning &&
+        // show Resume Button only when the timer is paused not running and in the starting phase
+        if ((!timerState.isRunning || timerState.isStarting) &&
             timerState.isPaused &&
-            timerState.focusTime < (timerState.defaultFocusTimeOption * 60))
+            timerState.focusTime <= (timerState.defaultFocusTimeOption * 60))
           ElevatedButton(
             onPressed: () {
               focusTimerNotifier.resumeFocusTimer();

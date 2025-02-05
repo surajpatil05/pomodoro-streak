@@ -23,10 +23,10 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
     // Synchronize the dropdown value with focusTimerProvider after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
+        final breakTimerNotifier = ref.read(breakTimerProvider.notifier);
         final defaultTimeline = ref.read(breakTimerProvider).selectedTimeline;
-        ref
-            .read(breakTimerProvider.notifier)
-            .fetchBreakModeData(defaultTimeline);
+
+        breakTimerNotifier.fetchBreakModeData(defaultTimeline);
         syncWithBreakTimer(ref); // Sync dropdown with focusTimerProvider
       }
     });
@@ -52,6 +52,7 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Top Row
         Padding(
@@ -125,12 +126,15 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
                     ],
                   ),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        width: 71.w,
-                        alignment: Alignment.centerRight,
+                        width: 70.w,
+                        alignment: Alignment.bottomRight,
                         child: Text(
                           selectedBreakTimeline, // display selected timeline
+                          softWrap: true,
+                          textAlign: TextAlign.right,
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                           ),
@@ -248,7 +252,9 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
 
         // Start Button
         if (!timerState.isRunning &&
-            timerState.breakTime == timerState.defaultBreakTimeOption * 60)
+            timerState.breakTime == timerState.defaultBreakTimeOption * 60 &&
+            !timerState.isStarting &&
+            !timerState.isPaused)
           ElevatedButton(
             onPressed: () {
               breakTimerNotifier.startBreakTimer();
@@ -266,8 +272,11 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
             ),
           ),
 
-        // Pause Button
-        if (timerState.isRunning && !timerState.isPaused)
+        // Show the Pause button only if the timer is running, is Starting, and not in paused state.
+        if ((timerState.isStarting || timerState.isRunning) &&
+            (!timerState.isPaused ||
+                timerState.breakTime <=
+                    (timerState.defaultBreakTimeOption * 60)))
           ElevatedButton(
             onPressed: () {
               breakTimerNotifier.pauseBreakTimer();
@@ -285,10 +294,10 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
             ),
           ),
 
-        // Resume Button
-        if (!timerState.isRunning &&
+        // show Resume Button only when the timer is paused not running and in the starting phase
+        if ((!timerState.isRunning || timerState.isStarting) &&
             timerState.isPaused &&
-            timerState.breakTime < (timerState.defaultBreakTimeOption * 60))
+            timerState.breakTime <= (timerState.defaultBreakTimeOption * 60))
           ElevatedButton(
             onPressed: () {
               breakTimerNotifier.resumeBreakTimer();
