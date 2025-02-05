@@ -86,7 +86,7 @@ flutter pub get
 
 
 ## Features to be added in future versions
-- [ ] Table device support
+- [ ] Tablet device support
 - [ ] Screen Always on while Timer is Running
 - [ ] Display Pomodoro remaining Timer on LockScreen While Running
 - [ ] different sounds to select from to play after Timer duration Completes
