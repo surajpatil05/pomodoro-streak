@@ -1,15 +1,21 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:pomodoro_streak/services/notification_service.dart';
+
 import 'package:pomodoro_streak/data/database_helper.dart';
 
 import 'package:pomodoro_streak/model/timer_state.dart';
-import 'package:pomodoro_streak/services/notification_service.dart';
+
+import 'package:pomodoro_streak/providers/focus_break_mode_toggle_notifier.dart';
 
 class BreakTimerNotifier extends Notifier<TimerState> {
   Timer? _timer;
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
+
+  Timer? _debounceTimer; // Timer for debouncing
 
   @override
   TimerState build() {
@@ -17,6 +23,8 @@ class BreakTimerNotifier extends Notifier<TimerState> {
       focusTime: 25 * 60,
       breakTime: 15 * 60,
       isRunning: false,
+      isStarting: false,
+      isPaused: false,
       isFocusMode: true,
       defaultFocusTimeOption: 25,
       defaultBreakTimeOption: 15,
@@ -32,38 +40,91 @@ class BreakTimerNotifier extends Notifier<TimerState> {
     );
   }
 
-  // starts the break timer and deliver notification after the timer ends
-  void startBreakTimer() {
-    if (state.isRunning) return; // Prevent starting a timer if already running
+  void _resetDebounce() {
+    // If debounce timer exists, cancel it
+    _debounceTimer?.cancel();
+  }
 
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (state.breakTime > 0) {
-        state = state.copyWith(
-          breakTime: state.breakTime - 1,
-          isRunning: true,
-        );
-      } else {
-        timer.cancel();
-        completeBreakPomodoroSession(); // Update cycle and time spent
-        resetBreakTimer(); // Reset the break timer when it ends
-        NotificationService().showNotification(
-            title: 'PomodoroStreak', body: 'Pomodoro session Finished');
-      }
-    });
-    state = state.copyWith(isRunning: true);
+  // starts the break timer and deliver notification after the timer ends
+  void startBreakTimer() async {
+    if (state.isRunning || state.isStarting) return;
+
+    // If the timer is paused, simply resume it.
+    if (state.isPaused) {
+      state = state.copyWith(isPaused: false, isRunning: true);
+    } else {
+      // Immediately update the state so that isRunning becomes true.
+      // This causes the UI to hide the START button and show PAUSE/RESUME.
+      state =
+          state.copyWith(isStarting: true, isRunning: true, isPaused: false);
+
+      // // Immediately decrement time to avoid 1s delay
+
+      // Once the initialization completes, clear the isStarting flag.
+      state = state.copyWith(isStarting: false);
+    }
+
+    // Ensuring that only one timer is created to prevent conflicts
+    if (_timer == null || !_timer!.isActive) {
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        if (state.breakTime > 0) {
+          // Decrement focus time
+          state = state.copyWith(breakTime: state.breakTime - 1);
+        } else {
+          // Timer finished
+          timer.cancel();
+          completeBreakPomodoroSession();
+          NotificationService().showNotification(
+            title: 'PomodoroStreak',
+            body: 'Break over! Time to focus again. 🔥',
+          );
+
+          ref
+              .read(focusBreakModeProvider.notifier)
+              .setFocusMode(); // Switch to Focus Mode after Break Timer ends
+
+          // Reset the Break Timer after switching modes
+          resetBreakTimer(); // Reset timer when session ends
+        }
+      });
+    }
   }
 
   // pauses the timer
-  void pauseBreakTimer() {
-    _timer?.cancel();
-    state = state.copyWith(isRunning: false, isPaused: true);
+  void pauseBreakTimer() async {
+    // Debounce logic to prevent rapid pausing/resuming before timer starts
+    _resetDebounce();
+
+    _debounceTimer = Timer(const Duration(milliseconds: 100), () {
+      // If the timer is still starting, ignore the pause request.
+      if (state.isRunning) {
+        // Cancel the Active timer
+        _timer?.cancel();
+
+        // Otherwise, update the state to pause the timer.
+        state = state.copyWith(isPaused: true, isRunning: false);
+      }
+    });
   }
 
-  // resumes the timer after pausing it
+  // Resumes the Break timer from the paused state
   void resumeBreakTimer() {
-    if (!state.isPaused) return;
-    startBreakTimer(); // Resume the timer
-    state = state.copyWith(isPaused: false);
+    // Debounce logic to prevent rapid pausing/resuming before timer starts
+    _resetDebounce();
+
+    // Prevent resuming if the timer is in the starting stage or if the timer is null
+    if (state.isStarting || _timer == null) {
+      // Debounce logic to prevent rapid pausing/resuming before timer starts
+      _resetDebounce();
+      return;
+    }
+
+    _debounceTimer = Timer(const Duration(milliseconds: 100), () {
+      // Prevent resuming if it's still in the starting phase
+      if (state.isPaused) {
+        startBreakTimer(); // Resume the timer
+      }
+    });
   }
 
   // reset the break
@@ -76,23 +137,25 @@ class BreakTimerNotifier extends Notifier<TimerState> {
     );
   }
 
-  void toggleBreakMode() {
-    // Prevent switching modes if the timer is running or paused
-    if (state.isRunning || state.isPaused) {
-      return;
-    }
+  // // Switch to focus mode
+  // void toggleBreakMode() {
+  //   // Prevent switching modes if the timer is running or paused
+  //   if (state.isRunning || state.isPaused) {
+  //     return;
+  //   }
 
-    // Cancel the current break timer
-    _timer?.cancel();
+  //   // Cancel the current break timer
+  //   _timer?.cancel();
 
-    // Switch mode to focus timer
-    state = state.copyWith(
-      isFocusMode: false,
-      focusTime: state.breakTime, // Keep current break time
-      isRunning: false,
-      breakTime: state.defaultBreakTimeOption * 60, // Reset Break time
-    );
-  }
+  //   // Switch to focus timer
+  //   state = state.copyWith(
+  //     isFocusMode: true,
+  //     isRunning: false,
+  //     isPaused: false,
+  //     focusTime: state.defaultFocusTimeOption * 60, // Reset focus time properly
+  //     breakTime: state.defaultBreakTimeOption * 60, // Reset break time
+  //   );
+  // }
 
   // Updates the break time option with the current break time from [01, 05, 15, 30] min
   void updateBreakTimeOption(int timeInMinutes) {
