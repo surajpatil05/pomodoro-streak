@@ -2,64 +2,25 @@ import 'package:flutter/material.dart';
 
 import 'package:sqflite/sqflite.dart';
 
-import 'package:path/path.dart';
+import 'db_creation.dart';
 
-class DatabaseHelper {
-  static final DatabaseHelper instance = DatabaseHelper._init();
-  static Database? _database;
+class Repository {
+  static final Repository instance = Repository._init();
 
-  DatabaseHelper._init();
+  Repository._init();
 
-  // return the database if it already exists otherwise initialize it
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDB('timer_data.db');
-    return _database!;
-  }
+  Future<Database> get _database async => await DbCreation.instance.database;
 
-  // initialize the database and create tables if they don't exist
-  Future<Database> _initDB(String path) async {
-    final dbPath = await getDatabasesPath();
-    final fullPath = join(dbPath, path);
-    debugPrint('database path $fullPath'); // log database path
-    return await openDatabase(fullPath, version: 1, onCreate: _onCreate);
-  }
-
-  // create tables if they don't exist
-  Future _onCreate(Database db, int version) async {
-    debugPrint('database tables created Successfully');
-    await db.execute('''
-        CREATE TABLE focus_mode (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          cycle_count INTEGER,
-          time_spent INTEGER,
-          timestamp TEXT
-        )
-      ''');
-
-    await db.execute('''
-        CREATE TABLE break_mode (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          cycle_count INTEGER,
-          time_spent INTEGER,
-          timestamp TEXT
-        )
-      ''');
-    debugPrint('Tables created Successfully');
-  }
-
-  // query the table and return query result
   Future<List<Map<String, dynamic>>> rawQuery(String query) async {
-    final db = await database;
+    final db = await _database;
     return await db.rawQuery(query);
   }
 
-  // Insert data in Focuse Mode table
   Future<int> insertFocusCycleCountAndTimeSpent(
       int cycleCount, int timeSpent, DateTime dateTime) async {
-    final db = await instance.database;
+    final db = await _database;
     debugPrint(
-        'Inserting into focus_mode: $cycleCount, $timeSpent, ${dateTime.toIso8601String()}');
+        'Inserting into focus_mode table: $cycleCount, $timeSpent, ${dateTime.toIso8601String()}');
     return await db.insert(
       'focus_mode',
       {
@@ -67,17 +28,15 @@ class DatabaseHelper {
         'time_spent': timeSpent,
         'timestamp': dateTime.toIso8601String(),
       },
-      conflictAlgorithm: ConflictAlgorithm.replace, // Prevent duplicates
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-  // Insert data in Break Mode table
   Future<int> insertBreakCycleCountAndTimeSpent(
       int cycleCount, int timeSpent, DateTime dateTime) async {
-    final db = await instance.database;
-
+    final db = await _database;
     debugPrint(
-        'Inserting into break_mode: $cycleCount, $timeSpent, ${dateTime.toIso8601String()}');
+        'Inserting into break_mode table: $cycleCount, $timeSpent, ${dateTime.toIso8601String()}');
     return await db.insert(
       'break_mode',
       {
@@ -85,16 +44,15 @@ class DatabaseHelper {
         'time_spent': timeSpent,
         'timestamp': dateTime.toIso8601String(),
       },
-      conflictAlgorithm: ConflictAlgorithm.replace, // Prevent duplicates
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-  // Get and Display (Cycle Count and Time Spent) for the selected timeline from focus_mode table to display in Focus Mode Screen
   Future<List<Map<String, dynamic>>> fetchFocusCycleCountAndTimeSpentByRange(
       String timeline) async {
-    final db = await instance.database;
-    // Adjust query based on the timeline
+    final db = await _database;
     String query;
+
     if (timeline == 'Today') {
       query =
           "SELECT * FROM focus_mode WHERE date(datetime(timestamp, 'utc'), 'localtime') = date('now', 'localtime')";
@@ -108,15 +66,15 @@ class DatabaseHelper {
       query =
           "SELECT * FROM focus_mode WHERE strftime('%Y', datetime(timestamp, 'utc'), 'localtime') = strftime('%Y', 'now', 'localtime')";
     }
+
     return await db.rawQuery(query);
   }
 
-  // Get and Display (Cycle Count and Time Spent) for the selected timeline from break_mode table to display in Break Mode Screen
   Future<List<Map<String, dynamic>>> fetchBreakCycleCountAndTimeSpentByRange(
       String timeline) async {
-    final db = await instance.database;
-    // Adjust query based on the timeline
+    final db = await _database;
     String query;
+
     if (timeline == 'Today') {
       query =
           "SELECT * FROM break_mode WHERE date(datetime(timestamp, 'utc'), 'localtime') = date('now', 'localtime')";
@@ -130,24 +88,19 @@ class DatabaseHelper {
       query =
           "SELECT * FROM break_mode WHERE strftime('%Y', datetime(timestamp, 'utc'), 'localtime') = strftime('%Y', 'now', 'localtime')";
     }
+
     return await db.rawQuery(query);
   }
 
-  // function to return all the stored records in the database in debug console
+  // to see data from database in debug console
   Future<List<Map<String, dynamic>>> fetchAllFocusModeData() async {
-    final db = await instance.database;
-
-    final result = await db.rawQuery("SELECT * FROM focus_mode");
-
-    return result;
+    final db = await _database;
+    return await db.rawQuery("SELECT * FROM focus_mode");
   }
 
-  // function to return all the stored records in the database in debug console
+  // to see data from database in debug console
   Future<List<Map<String, dynamic>>> fetchAllBreakModeData() async {
-    final db = await instance.database;
-
-    final result = await db.rawQuery("SELECT * FROM break_mode");
-
-    return result;
+    final db = await _database;
+    return await db.rawQuery("SELECT * FROM break_mode");
   }
 }

@@ -5,16 +5,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:pomodoro_streak/providers/break_timer_notifier.dart';
-import 'package:pomodoro_streak/providers/focus_timer_notifier.dart';
+import 'package:pomodoro_streak/viewmodels/break_timer_viewmodel.dart';
+import 'package:pomodoro_streak/viewmodels/focus_timer_viewmodel.dart';
 
-import 'package:pomodoro_streak/providers/select_dropdown_notifier.dart';
+import 'package:pomodoro_streak/viewmodels/timeline_selection_viewmodel.dart';
 
-void showBottomSheetContent(BuildContext context, WidgetRef ref) {
+// Function to show the timeline Selection bottom sheet
+void timelineBottomSheetWidget(BuildContext context, WidgetRef ref) {
   final options = ['Today', 'This Week', 'This Month', 'Total Time'];
 
   // Read the current selected option from the dropdown provider
-  final selectedTimeline = ref.read(selectDropDownProvider);
+  // final selectedTimeline = ref.read(timelineSelectionProvider);
+  final selectedTimeline = ref.watch(timelineSelectionProvider);
 
   showModalBottomSheet(
     context: context,
@@ -49,8 +51,13 @@ void showBottomSheetContent(BuildContext context, WidgetRef ref) {
                     onTap: () {
                       // Update selected option in bottomsheet dropdown and highlight it
                       ref
-                          .read(selectDropDownProvider.notifier)
+                          .read(timelineSelectionProvider.notifier)
                           .setHighlightedOption(option);
+
+                      // Confirm the selected option
+                      ref
+                          .read(timelineSelectionProvider.notifier)
+                          .confirmSelection();
 
                       // Notify FocusTimerNotifier about the timeline change
                       ref

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:pomodoro_streak/providers/break_timer_notifier.dart';
-import 'package:pomodoro_streak/providers/select_dropdown_notifier.dart';
+import 'package:pomodoro_streak/viewmodels/break_timer_viewmodel.dart';
+import 'package:pomodoro_streak/viewmodels/timeline_selection_viewmodel.dart';
 
-import 'package:pomodoro_streak/utils/show_bottom_sheet_content.dart';
+import 'package:pomodoro_streak/views/widgets/timeline_bottom_sheet_widget.dart';
 
 class BreakModeWidget extends ConsumerStatefulWidget {
   const BreakModeWidget({super.key});
@@ -19,6 +19,10 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
   @override
   void initState() {
     super.initState();
+
+    Future.microtask(
+      () => ref.read(breakTimerProvider.notifier).resetBreakTimeOption(),
+    );
 
     // Synchronize the dropdown value with focusTimerProvider after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -35,13 +39,13 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
   @override
   Widget build(BuildContext context) {
     // Provider to update the timeSpent and cyclesCount values
-    final timerState = ref.watch(breakTimerProvider);
+    final breakModeTimerState = ref.watch(breakTimerProvider);
 
     // Provider to access FocusTimerNotifier functions
-    final breakTimerNotifier = ref.read(breakTimerProvider.notifier);
+    final breakModeTimerActions = ref.read(breakTimerProvider.notifier);
 
     // Provider to get the selected dropdown option
-    String selectedBreakTimeline = ref.watch(selectDropDownProvider);
+    String selectedBreakTimeline = ref.watch(timelineSelectionProvider);
 
     // Format time as MM:SS
     String formatTime(int seconds) {
@@ -76,8 +80,8 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
                         ),
                         SizedBox(width: 4.w),
                         Text(
-                          timerState
-                              .getCyclesCount()
+                          breakModeTimerActions
+                              .getBreakModeCyclesCount()
                               .toString(), // display timeline time in hours and minutes
                           style: TextStyle(fontSize: 18.sp),
                         ),
@@ -118,8 +122,8 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        timerState
-                            .formatTimeSpent(), // display timeline time in hours and minutes
+                        breakModeTimerActions
+                            .getBreakModeTimeSpent(), // display timeline time in hours and minutes
                         style: TextStyle(
                             fontSize: 18.sp, fontWeight: FontWeight.w700),
                       ),
@@ -142,7 +146,7 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
                       ),
                       IconButton(
                         onPressed: () {
-                          showBottomSheetContent(
+                          timelineBottomSheetWidget(
                               context, ref); // show bottom sheet
                         },
                         icon: Icon(Icons.expand_more),
@@ -161,7 +165,7 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
 
         // Timer Display
         Text(
-          formatTime(timerState.breakTime),
+          formatTime(breakModeTimerState.timerModel.breakTime),
           style: TextStyle(
             fontSize: 70.sp,
             fontWeight: FontWeight.bold,
@@ -172,16 +176,15 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [1, 5, 15, 30].map((time) {
-            final isSelected = timerState.defaultBreakTimeOption == time;
+            final isSelected =
+                breakModeTimerState.selectedBreakTimeOption == time;
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 10.h),
               child: InkWell(
-                onTap: timerState.isRunning ||
-                        timerState.breakTime <
-                            (timerState.defaultBreakTimeOption * 60)
+                onTap: breakModeTimerState.isRunning
                     ? null // Disable when timer is running
                     : () {
-                        breakTimerNotifier.updateBreakTimeOption(time);
+                        breakModeTimerActions.updateBreakTimeOption(time);
                       },
                 child: Container(
                   padding:
@@ -251,13 +254,14 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
         SizedBox(height: 100.h),
 
         // Start Button
-        if (!timerState.isRunning &&
-            timerState.breakTime == timerState.defaultBreakTimeOption * 60 &&
-            !timerState.isStarting &&
-            !timerState.isPaused)
+        if (!breakModeTimerState.isRunning &&
+            breakModeTimerState.timerModel.breakTime ==
+                breakModeTimerState.selectedBreakTimeOption * 60 &&
+            !breakModeTimerState.isStarting &&
+            !breakModeTimerState.isPaused)
           ElevatedButton(
             onPressed: () {
-              breakTimerNotifier.startBreakTimer();
+              breakModeTimerActions.startBreakTimer();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
@@ -273,13 +277,13 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
           ),
 
         // Show the Pause button only if the timer is running, is Starting, and not in paused state.
-        if ((timerState.isStarting || timerState.isRunning) &&
-            (!timerState.isPaused ||
-                timerState.breakTime <=
-                    (timerState.defaultBreakTimeOption * 60)))
+        if ((breakModeTimerState.isStarting || breakModeTimerState.isRunning) &&
+            (!breakModeTimerState.isPaused ||
+                breakModeTimerState.timerModel.breakTime <=
+                    (breakModeTimerState.selectedBreakTimeOption * 60)))
           ElevatedButton(
             onPressed: () {
-              breakTimerNotifier.pauseBreakTimer();
+              breakModeTimerActions.pauseBreakTimer();
             },
             style: OutlinedButton.styleFrom(
               side: BorderSide(color: Colors.white, width: 2.w),
@@ -295,12 +299,14 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
           ),
 
         // show Resume Button only when the timer is paused not running and in the starting phase
-        if ((!timerState.isRunning || timerState.isStarting) &&
-            timerState.isPaused &&
-            timerState.breakTime <= (timerState.defaultBreakTimeOption * 60))
+        if ((!breakModeTimerState.isRunning ||
+                breakModeTimerState.isStarting) &&
+            breakModeTimerState.isPaused &&
+            breakModeTimerState.timerModel.breakTime <=
+                (breakModeTimerState.selectedBreakTimeOption * 60))
           ElevatedButton(
             onPressed: () {
-              breakTimerNotifier.resumeBreakTimer();
+              breakModeTimerActions.resumeBreakTimer();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,

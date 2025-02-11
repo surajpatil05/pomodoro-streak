@@ -1,42 +1,56 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:pomodoro_streak/data/repository.dart';
+
+import 'package:pomodoro_streak/data/models/timer_model.dart';
+
 import 'package:pomodoro_streak/services/notification_service.dart';
 
-import 'package:pomodoro_streak/data/database_helper.dart';
+import 'package:pomodoro_streak/data/models/timer_state.dart';
 
-import 'package:pomodoro_streak/model/timer_state.dart';
+import 'package:pomodoro_streak/viewmodels/toggle_focusbreak_mode_notifier.dart';
 
-import 'package:pomodoro_streak/providers/focus_break_mode_toggle_notifier.dart';
-
-class BreakTimerNotifier extends Notifier<TimerState> {
+class BreakTimerViewModel extends Notifier<TimerState> {
   Timer? _timer;
-  final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
+  final Repository _databaseHelper = Repository.instance;
 
   Timer? _debounceTimer; // Timer for debouncing
 
   @override
   TimerState build() {
     return TimerState(
-      focusTime: 25 * 60,
-      breakTime: 15 * 60,
       isRunning: false,
-      isStarting: false,
       isPaused: false,
-      isFocusMode: true,
-      defaultFocusTimeOption: 25,
-      defaultBreakTimeOption: 15,
-      cyclesToday: 0,
-      cyclesThisWeek: 0,
-      cyclesThisMonth: 0,
-      totalCycles: 0,
-      timeSpentToday: 0,
-      timeSpentThisWeek: 0,
-      timeSpentThisMonth: 0,
-      totalTimeSpent: 0,
+      isStarting: false,
+      selectedBreakTimeOption: 5,
       selectedTimeline: 'Today',
+      timerModel: TimerModel(
+        // ✅ Initialize TimerModel inside TimerState
+        focusTime: 25 * 60, // 25 minutes
+        breakTime: 5 * 60, // 5 minutes
+        cyclesToday: 0,
+        cyclesThisWeek: 0,
+        cyclesThisMonth: 0,
+        totalCycles: 0,
+        timeSpentToday: 0,
+        timeSpentThisWeek: 0,
+        timeSpentThisMonth: 0,
+        totalTimeSpent: 0,
+        timestamp: DateTime.now(),
+      ),
+    );
+  }
+
+  // Reset the break time option to 5 minutes
+  // every time when user switches between Focus and Break Mode
+  void resetBreakTimeOption() {
+    state = state.copyWith(
+      selectedBreakTimeOption: 5,
+      timerModel: state.timerModel.copyWith(breakTime: 5 * 60),
     );
   }
 
@@ -67,9 +81,11 @@ class BreakTimerNotifier extends Notifier<TimerState> {
     // Ensuring that only one timer is created to prevent conflicts
     if (_timer == null || !_timer!.isActive) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-        if (state.breakTime > 0) {
+        if (state.timerModel.breakTime > 0) {
           // Decrement focus time
-          state = state.copyWith(breakTime: state.breakTime - 1);
+          state = state.copyWith(
+              timerModel: state.timerModel
+                  .copyWith(breakTime: state.timerModel.breakTime - 1));
         } else {
           // Timer finished
           timer.cancel();
@@ -80,7 +96,7 @@ class BreakTimerNotifier extends Notifier<TimerState> {
           );
 
           ref
-              .read(focusBreakModeProvider.notifier)
+              .read(toggleFocusBreakModeProvider.notifier)
               .setFocusMode(); // Switch to Focus Mode after Break Timer ends
 
           // Reset the Break Timer after switching modes
@@ -133,7 +149,8 @@ class BreakTimerNotifier extends Notifier<TimerState> {
     state = state.copyWith(
       isRunning: false,
       isPaused: false,
-      breakTime: state.defaultBreakTimeOption * 60,
+      timerModel: state.timerModel
+          .copyWith(breakTime: state.selectedBreakTimeOption * 60),
     );
   }
 
@@ -141,7 +158,7 @@ class BreakTimerNotifier extends Notifier<TimerState> {
   void updateBreakTimeOption(int timeInMinutes) {
     state = state.copyWith(
       selectedBreakTimeOption: timeInMinutes,
-      breakTime: timeInMinutes * 60, // // Update break time in seconds
+      timerModel: state.timerModel.copyWith(breakTime: timeInMinutes * 60),
       isRunning: false, // reset the timer when a new time is selected
     );
   }
@@ -149,10 +166,10 @@ class BreakTimerNotifier extends Notifier<TimerState> {
   // Update session and store data
   void completeBreakPomodoroSession() {
     // Add time to the appropriate category (today, week, month, total)
-    final duration = state.defaultBreakTimeOption * 60; // duration in seconds
+    final duration = state.selectedBreakTimeOption * 60; // duration in seconds
 
-    int cyclesToday = state.cyclesToday + 1;
-    int timeSpentToday = state.timeSpentToday + duration;
+    int cyclesToday = 1;
+    int timeSpentToday = duration;
 
     _databaseHelper.insertBreakCycleCountAndTimeSpent(
       cyclesToday,
@@ -160,17 +177,22 @@ class BreakTimerNotifier extends Notifier<TimerState> {
       DateTime.now(),
     );
 
-    state = state.copyWith(
-      cyclesToday: cyclesToday,
-      timeSpentToday: timeSpentToday,
-    );
+    // state = state.copyWith(
+    //   timerModel: state.timerModel.copyWith(
+    //     cyclesToday: cyclesToday,
+    //     timeSpentToday: timeSpentToday,
+    //   ),
+    // );
+
+    // Fetch and update data for the current selected timeline
+    fetchBreakModeData(state.selectedTimeline);
   }
 
-// Fetch data (Cycle Count and Time Spent) for the selected timeline and update state
+  // Fetch data (Cycle Count and Time Spent) for the selected timeline and update state
   Future<void> fetchBreakModeData(String timeline) async {
     final result =
         await _databaseHelper.fetchBreakCycleCountAndTimeSpentByRange(timeline);
-    debugPrint('Fetched break data for $timeline: $result');
+    debugPrint('Fetched break Mode data for $timeline: $result');
 
     int cycleCount = 0;
     int timeSpent = 0;
@@ -181,32 +203,73 @@ class BreakTimerNotifier extends Notifier<TimerState> {
     }
 
     // Update only the relevant fields based on the timeline
-    switch (timeline) {
+    state = state.copyWith(
+      timerModel: state.timerModel.copyWith(
+        cyclesToday:
+            timeline == 'Today' ? cycleCount : state.timerModel.cyclesToday,
+        timeSpentToday:
+            timeline == 'Today' ? timeSpent : state.timerModel.timeSpentToday,
+        cyclesThisWeek: timeline == 'This Week'
+            ? cycleCount
+            : state.timerModel.cyclesThisWeek,
+        timeSpentThisWeek: timeline == 'This Week'
+            ? timeSpent
+            : state.timerModel.timeSpentThisWeek,
+        cyclesThisMonth: timeline == 'This Month'
+            ? cycleCount
+            : state.timerModel.cyclesThisMonth,
+        timeSpentThisMonth: timeline == 'This Month'
+            ? timeSpent
+            : state.timerModel.timeSpentThisMonth,
+        totalCycles: timeline == 'Total Time'
+            ? cycleCount
+            : state.timerModel.totalCycles,
+        totalTimeSpent: timeline == 'Total Time'
+            ? timeSpent
+            : state.timerModel.totalTimeSpent,
+      ),
+    );
+  }
+
+  // Get cycles count based on selected timeline
+  int getBreakModeCyclesCount() {
+    switch (state.selectedTimeline) {
       case 'Today':
-        state = state.copyWith(
-          cyclesToday: cycleCount,
-          timeSpentToday: timeSpent,
-        );
+        return state.timerModel.cyclesToday;
+      case 'This Week':
+        return state.timerModel.cyclesThisWeek;
+      case 'This Month':
+        return state.timerModel.cyclesThisMonth;
+      case 'Total Time':
+        return state.timerModel.totalCycles;
+      default:
+        return 0;
+    }
+  }
+
+  // Get time spent based on selected timeline in HH:MM format
+  String getBreakModeTimeSpent() {
+    int timeSpent;
+    switch (state.selectedTimeline) {
+      case 'Today':
+        timeSpent = state.timerModel.timeSpentToday;
         break;
       case 'This Week':
-        state = state.copyWith(
-          cyclesThisWeek: cycleCount,
-          timeSpentThisWeek: timeSpent,
-        );
+        timeSpent = state.timerModel.timeSpentThisWeek;
         break;
       case 'This Month':
-        state = state.copyWith(
-          cyclesThisMonth: cycleCount,
-          timeSpentThisMonth: timeSpent,
-        );
+        timeSpent = state.timerModel.timeSpentThisMonth;
         break;
       case 'Total Time':
-        state = state.copyWith(
-          totalCycles: cycleCount,
-          totalTimeSpent: timeSpent,
-        );
+        timeSpent = state.timerModel.totalTimeSpent;
         break;
+      default:
+        timeSpent = 0;
     }
+    // Show time spent in HH:MM format
+    final hours = (timeSpent ~/ 3600).toString().padLeft(2, '0');
+    final minutes = ((timeSpent % 3600) ~/ 60).toString().padLeft(2, '0');
+    return '$hours : $minutes';
   }
 
   // Update the selected timeline in the state
@@ -218,6 +281,6 @@ class BreakTimerNotifier extends Notifier<TimerState> {
   }
 }
 
-// Provider for BreakTimerNotifier
+/// Provider for managing the state of the break timer.
 final breakTimerProvider =
-    NotifierProvider<BreakTimerNotifier, TimerState>(BreakTimerNotifier.new);
+    NotifierProvider<BreakTimerViewModel, TimerState>(BreakTimerViewModel.new);

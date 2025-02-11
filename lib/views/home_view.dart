@@ -3,26 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:pomodoro_streak/providers/break_timer_notifier.dart';
-import 'package:pomodoro_streak/providers/focus_timer_notifier.dart';
-import 'package:pomodoro_streak/providers/focus_break_mode_toggle_notifier.dart';
+import 'package:pomodoro_streak/viewmodels/break_timer_viewmodel.dart';
+import 'package:pomodoro_streak/viewmodels/focus_timer_viewmodel.dart';
+import 'package:pomodoro_streak/viewmodels/toggle_focusbreak_mode_notifier.dart';
 
-import 'package:pomodoro_streak/screens/break_mode_widget.dart';
-import 'package:pomodoro_streak/screens/focus_mode_widget.dart';
+import 'package:pomodoro_streak/views/widgets/break_mode_widget.dart';
+import 'package:pomodoro_streak/views/widgets/focus_mode_widget.dart';
 
-class MainScreen extends ConsumerWidget {
-  const MainScreen({super.key});
+class HomeView extends ConsumerWidget {
+  const HomeView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Watches the state of focusBreakModeProvider (boolean state)
     // to determine if the current mode is Focus Mode (true) or Break Mode (false)
-    final isFocusMode = ref.watch(focusBreakModeProvider);
+    final isFocusMode = ref.watch(toggleFocusBreakModeProvider);
 
-    // Reads the notifier for focusBreakModeProvider to access its methods
-    // which allow toggling between Focus Mode and Break Mode
-    final focusBreakModeNotifier =
-        ref.read(focusBreakModeProvider.notifier); // Access the notifier
+    // used to toggle between Focus Mode and Break Mode
+    final toggleModeNotifier =
+        ref.read(toggleFocusBreakModeProvider.notifier); // Access the notifier
 
     // Access the appropriate timer state based on the current mode (Focus or Break)
     final timerState = isFocusMode
@@ -44,7 +43,7 @@ class MainScreen extends ConsumerWidget {
                 onPressed: timerState.isRunning || timerState.isPaused
                     ? null
                     : () {
-                        focusBreakModeNotifier.setFocusMode();
+                        toggleModeNotifier.setFocusMode();
                       },
                 child: Text(
                   'Focus',
@@ -58,7 +57,7 @@ class MainScreen extends ConsumerWidget {
                 onPressed: timerState.isRunning || timerState.isPaused
                     ? null
                     : () {
-                        focusBreakModeNotifier.setBreakMode();
+                        toggleModeNotifier.setBreakMode();
                       },
                 child: Text(
                   'Break',
@@ -194,10 +193,10 @@ class MainScreen extends ConsumerWidget {
                 ),
                 onPressed: () async {
                   if (isFocusMode) {
-                    (timerNotifier as FocusTimerNotifier)
+                    (timerNotifier as FocusTimerViewModel)
                         .resetFocusTimer(); // reset focus timer
                   } else {
-                    (timerNotifier as BreakTimerNotifier)
+                    (timerNotifier as BreakTimerViewModel)
                         .resetBreakTimer(); // reset break timer
                   }
                 },
@@ -205,7 +204,6 @@ class MainScreen extends ConsumerWidget {
             ),
         ],
       ),
-      // body: isFocusMode ? const FocusModeWidget() : const BreakModeWidget(),
       body: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth > 600) {

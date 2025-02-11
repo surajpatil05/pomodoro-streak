@@ -1,11 +1,13 @@
-// selected_timeline_option_notifier.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pomodoro_streak/providers/break_timer_notifier.dart';
-import 'package:pomodoro_streak/providers/focus_timer_notifier.dart';
 
-class SelectDropDownNotifier extends Notifier<String> {
-  SelectDropDownNotifier({required String initialOption})
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:pomodoro_streak/viewmodels/break_timer_viewmodel.dart';
+
+import 'package:pomodoro_streak/viewmodels/focus_timer_viewmodel.dart';
+
+class TimelineSelectionViewModel extends Notifier<String> {
+  TimelineSelectionViewModel({required String initialOption})
       : _highlightedOption = initialOption,
         _selectOption = initialOption;
 
@@ -34,8 +36,9 @@ class SelectDropDownNotifier extends Notifier<String> {
 }
 
 // Dropdown option Provider for Focus and Break Mode
-final selectDropDownProvider = NotifierProvider<SelectDropDownNotifier, String>(
-  () => SelectDropDownNotifier(
+final timelineSelectionProvider =
+    NotifierProvider<TimelineSelectionViewModel, String>(
+  () => TimelineSelectionViewModel(
     initialOption: 'Today', // Default value for initialization
   ),
 );
@@ -43,11 +46,15 @@ final selectDropDownProvider = NotifierProvider<SelectDropDownNotifier, String>(
 // Sync function to update the dropdown state with focusTimerProvider
 void syncWithFocusTimer(WidgetRef ref) {
   final focusTimeline = ref.read(focusTimerProvider).selectedTimeline;
-  ref.read(selectDropDownProvider.notifier).setHighlightedOption(focusTimeline);
+  ref
+      .read(timelineSelectionProvider.notifier)
+      .setHighlightedOption(focusTimeline);
 }
 
 // Sync function to update the dropdown state with breakTimerProvider
 void syncWithBreakTimer(WidgetRef ref) {
   final breakTimeline = ref.read(breakTimerProvider).selectedTimeline;
-  ref.read(selectDropDownProvider.notifier).setHighlightedOption(breakTimeline);
+  ref
+      .read(timelineSelectionProvider.notifier)
+      .setHighlightedOption(breakTimeline);
 }

@@ -8,11 +8,11 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:pomodoro_streak/providers/update_notifier.dart';
+import 'package:pomodoro_streak/data/repository.dart';
 
-import 'package:pomodoro_streak/screens/main_screen.dart';
+import 'package:pomodoro_streak/viewmodels/app_update_notifier.dart';
 
-import 'package:pomodoro_streak/data/database_helper.dart';
+import 'package:pomodoro_streak/views/home_view.dart';
 
 import 'package:pomodoro_streak/services/notification_service.dart';
 
@@ -51,11 +51,11 @@ void main() async {
 
   // fetch all focus_mode table data
   List<Map<String, dynamic>> focusModeData =
-      await DatabaseHelper.instance.fetchAllFocusModeData();
+      await Repository.instance.fetchAllFocusModeData();
 
   // fetch all break_mode table data
   List<Map<String, dynamic>> breakModeData =
-      await DatabaseHelper.instance.fetchAllBreakModeData();
+      await Repository.instance.fetchAllBreakModeData();
 
   // print all focus_mode table data in debug console
   debugPrint(focusModeData.toString());
@@ -94,7 +94,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     // Automatically check for updates
     Future.microtask(() {
-      ref.read(updateNotifierProvider.notifier).checkForUpdate();
+      ref.read(appUpdateProvider.notifier).checkForUpdate();
     });
   }
 
@@ -117,7 +117,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         title: 'Pomodoro App',
         theme: themeData,
         debugShowCheckedModeBanner: false,
-        home: MainScreen(), // pomodoro application screen
+        home: HomeView(), // pomodoro application screen
       ),
     );
   }

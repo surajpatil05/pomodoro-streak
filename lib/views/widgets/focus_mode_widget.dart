@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:pomodoro_streak/providers/focus_timer_notifier.dart';
-import 'package:pomodoro_streak/providers/select_dropdown_notifier.dart';
+import 'package:pomodoro_streak/viewmodels/focus_timer_viewmodel.dart';
+import 'package:pomodoro_streak/viewmodels/timeline_selection_viewmodel.dart';
 
-import 'package:pomodoro_streak/utils/show_bottom_sheet_content.dart';
+import 'package:pomodoro_streak/views/widgets/timeline_bottom_sheet_widget.dart';
 
 class FocusModeWidget extends ConsumerStatefulWidget {
   const FocusModeWidget({super.key});
@@ -19,6 +19,10 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
   @override
   void initState() {
     super.initState();
+
+    Future.microtask(
+      () => ref.read(focusTimerProvider.notifier).resetFocusTimeOption(),
+    );
 
     // Ensure ref is used inside addPostFrameCallback to avoid early access
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -34,16 +38,16 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // Provider to update the timeSpent and cyclesCount values
-    final timerState = ref.watch(focusTimerProvider);
+    // Provider to update pomodoro timer value when timer starts
+    final focusModeTimerState = ref.watch(focusTimerProvider);
 
-    // Provider to access FocusTimerNotifier functions
-    final focusTimerNotifier = ref.read(focusTimerProvider.notifier);
+    // Provider to triggers actions such as (startFocusTimer, pauseFocusTimer, resumeFocusTimer) and update the timeSpent and cyclesCount values
+    final focusModeTimerActions = ref.read(focusTimerProvider.notifier);
 
-    // Provider to get the selected dropdown option
-    String selectedFocusTimeline = ref.watch(selectDropDownProvider);
+    // Provider to get the selected bottom sheet option
+    String selectedFocusModeTimeline = ref.watch(timelineSelectionProvider);
 
-    // Format time as MM:SS
+    // Format time as MM:SS of pomodoro timer session
     String formatTime(int seconds) {
       final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
       final secs = (seconds % 60).toString().padLeft(2, '0');
@@ -77,8 +81,8 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                         ),
                         SizedBox(width: 4.w),
                         Text(
-                          timerState
-                              .getCyclesCount()
+                          focusModeTimerActions
+                              .getFocusModeCyclesCount()
                               .toString(), // display timeline time in hours and minutes
                           style: TextStyle(fontSize: 18.sp),
                         ),
@@ -119,8 +123,8 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        timerState
-                            .formatTimeSpent(), // display timeline time in hours and minutes
+                        focusModeTimerActions
+                            .getFocusModeTimeSpent(), // display timeline time in hours and minutes
 
                         style: TextStyle(
                             fontSize: 18.sp, fontWeight: FontWeight.w700),
@@ -134,7 +138,7 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                         width: 70.w,
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          selectedFocusTimeline, // display selected timeline
+                          selectedFocusModeTimeline, // display selected timeline
                           softWrap: true,
                           textAlign: TextAlign.right,
                           style: TextStyle(
@@ -144,7 +148,7 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                       ),
                       IconButton(
                         onPressed: () {
-                          showBottomSheetContent(
+                          timelineBottomSheetWidget(
                               context, ref); // show the bottom sheet
                         },
                         icon: Icon(Icons.expand_more),
@@ -163,7 +167,7 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
 
         // Timer Display
         Text(
-          formatTime(timerState.focusTime),
+          formatTime(focusModeTimerState.timerModel.focusTime),
           style: TextStyle(
             fontSize: 70.sp,
             fontWeight: FontWeight.bold,
@@ -174,16 +178,15 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [5, 15, 25, 60].map((time) {
-            final isSelected = timerState.defaultFocusTimeOption == time;
+            final isSelected =
+                focusModeTimerState.selectedFocusTimeOption == time;
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 10.h),
               child: InkWell(
-                onTap: timerState.isRunning ||
-                        timerState.focusTime <
-                            (timerState.defaultFocusTimeOption * 60)
+                onTap: focusModeTimerState.isRunning
                     ? null // Disable when timer is running
                     : () {
-                        focusTimerNotifier.updateFocusTimeOption(time);
+                        focusModeTimerActions.updateFocusTimeOption(time);
                       },
                 child: Container(
                   padding:
@@ -253,13 +256,14 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
         SizedBox(height: 100.h),
 
         // Show Start button only if timer is not running, not starting, and not paused.
-        if (!timerState.isRunning &&
-            timerState.focusTime == timerState.defaultFocusTimeOption * 60 &&
-            !timerState.isStarting &&
-            !timerState.isPaused)
+        if (!focusModeTimerState.isRunning &&
+            focusModeTimerState.timerModel.focusTime ==
+                focusModeTimerState.selectedFocusTimeOption * 60 &&
+            !focusModeTimerState.isStarting &&
+            !focusModeTimerState.isPaused)
           ElevatedButton(
             onPressed: () {
-              focusTimerNotifier.startFocusTimer();
+              focusModeTimerActions.startFocusTimer();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
@@ -274,13 +278,13 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
             ),
           ),
         // Show the Pause button only if the timer is running, is Starting, and not in paused state.
-        if ((timerState.isStarting || timerState.isRunning) &&
-            (!timerState.isPaused ||
-                timerState.focusTime <=
-                    (timerState.defaultFocusTimeOption * 60)))
+        if ((focusModeTimerState.isStarting || focusModeTimerState.isRunning) &&
+            (!focusModeTimerState.isPaused ||
+                focusModeTimerState.timerModel.focusTime <=
+                    (focusModeTimerState.selectedFocusTimeOption * 60)))
           ElevatedButton(
             onPressed: () {
-              focusTimerNotifier.pauseFocusTimer();
+              focusModeTimerActions.pauseFocusTimer();
             },
             style: OutlinedButton.styleFrom(
               side: BorderSide(color: Colors.white, width: 2.w), // white border
@@ -296,12 +300,14 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
           ),
 
         // show Resume Button only when the timer is paused not running and in the starting phase
-        if ((!timerState.isRunning || timerState.isStarting) &&
-            timerState.isPaused &&
-            timerState.focusTime <= (timerState.defaultFocusTimeOption * 60))
+        if ((!focusModeTimerState.isRunning ||
+                focusModeTimerState.isStarting) &&
+            focusModeTimerState.isPaused &&
+            focusModeTimerState.timerModel.focusTime <=
+                (focusModeTimerState.selectedFocusTimeOption * 60))
           ElevatedButton(
             onPressed: () {
-              focusTimerNotifier.resumeFocusTimer();
+              focusModeTimerActions.resumeFocusTimer();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
