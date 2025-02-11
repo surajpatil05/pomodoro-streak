@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:pomodoro_streak/viewmodels/break_timer_viewmodel.dart';
 import 'package:pomodoro_streak/viewmodels/focus_timer_viewmodel.dart';
-import 'package:pomodoro_streak/viewmodels/toggle_focusbreak_mode_notifier.dart';
+import 'package:pomodoro_streak/viewmodels/toggle_focusbreak_mode_viewmodel.dart';
 
 import 'package:pomodoro_streak/views/widgets/break_mode_widget.dart';
 import 'package:pomodoro_streak/views/widgets/focus_mode_widget.dart';

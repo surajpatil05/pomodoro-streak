@@ -10,7 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:pomodoro_streak/data/repository.dart';
 
-import 'package:pomodoro_streak/viewmodels/app_update_notifier.dart';
+import 'package:pomodoro_streak/viewmodels/app_update_viewmodel.dart';
 
 import 'package:pomodoro_streak/views/home_view.dart';
 
@@ -91,11 +91,6 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     // Initialize the splash screen before app starts
     initSplashScreen();
-
-    // Automatically check for updates
-    Future.microtask(() {
-      ref.read(appUpdateProvider.notifier).checkForUpdate();
-    });
   }
 
   // Initialize the splash screen in app starting and remove after 3 seconds duration
@@ -104,6 +99,48 @@ class _MyAppState extends ConsumerState<MyApp> {
     await Future.delayed(Duration(seconds: 1));
     debugPrint('unpausing splash screen ...');
     FlutterNativeSplash.remove();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkForUpdates(); // Pass context and ref
+    });
+  }
+
+  // Check for app update
+  Future<void> _checkForUpdates() async {
+    final appUpdateViewModel =
+        ref.read(appUpdateProvider.notifier); // Get ViewModel
+
+    appUpdateViewModel.checkForUpdate((updateInfo) {
+      if (mounted && updateInfo != null) {
+        // Show dialog when new update available
+        showDialog(
+            context: context,
+            builder: (BuildContext dialogContext) {
+              return AlertDialog(
+                title: Text('Update Available'),
+                content: Text('A new version of the app is available. '
+                    'Would you like to update now?'),
+                actions: [
+                  TextButton(
+                    onPressed: () async {
+                      Navigator.of(dialogContext).pop();
+                      ref
+                          .read(appUpdateProvider.notifier)
+                          .performUpdate(context, updateInfo);
+                    },
+                    child: Text('Update Now'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: Text('Later'),
+                  )
+                ],
+              );
+            });
+      }
+    });
   }
 
   // This widget is the root of your application.
