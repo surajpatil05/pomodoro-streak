@@ -12,7 +12,7 @@ import 'package:pomodoro_streak/services/notification_service.dart';
 
 import 'package:pomodoro_streak/data/models/timer_model.dart';
 
-import 'package:pomodoro_streak/viewmodels/toggle_focusbreak_mode_notifier.dart';
+import 'package:pomodoro_streak/viewmodels/toggle_focusbreak_mode_viewmodel.dart';
 
 // TimerNotifier class to manage the timer logic
 class FocusTimerViewModel extends Notifier<TimerState> {

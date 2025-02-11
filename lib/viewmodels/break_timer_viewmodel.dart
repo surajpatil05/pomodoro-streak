@@ -12,7 +12,7 @@ import 'package:pomodoro_streak/services/notification_service.dart';
 
 import 'package:pomodoro_streak/data/models/timer_state.dart';
 
-import 'package:pomodoro_streak/viewmodels/toggle_focusbreak_mode_notifier.dart';
+import 'package:pomodoro_streak/viewmodels/toggle_focusbreak_mode_viewmodel.dart';
 
 class BreakTimerViewModel extends Notifier<TimerState> {
   Timer? _timer;
@@ -29,7 +29,7 @@ class BreakTimerViewModel extends Notifier<TimerState> {
       selectedBreakTimeOption: 5,
       selectedTimeline: 'Today',
       timerModel: TimerModel(
-        // ✅ Initialize TimerModel inside TimerState
+        //Initialize TimerModel inside TimerState
         focusTime: 25 * 60, // 25 minutes
         breakTime: 5 * 60, // 5 minutes
         cyclesToday: 0,
