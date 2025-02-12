@@ -46,9 +46,6 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // Initialize the notification service
-  NotificationService().initNotification();
-
   // fetch all focus_mode table data
   List<Map<String, dynamic>> focusModeData =
       await Repository.instance.fetchAllFocusModeData();
@@ -91,6 +88,9 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     // Initialize the splash screen before app starts
     initSplashScreen();
+
+    // Initialize the notification service
+    NotificationService().initNotification(context);
   }
 
   // Initialize the splash screen in app starting and remove after 3 seconds duration
