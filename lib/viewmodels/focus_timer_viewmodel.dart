@@ -30,7 +30,7 @@ class FocusTimerViewModel extends Notifier<TimerState> {
       selectedFocusTimeOption: 25,
       selectedTimeline: 'Today',
       timerModel: TimerModel(
-        // ✅ Initialize TimerModel inside TimerState
+        // Initialize TimerModel inside TimerState
         focusTime: 25 * 60, // 25 minutes
         breakTime: 5 * 60, // 5 minutes
         cyclesToday: 0,
@@ -86,14 +86,29 @@ class FocusTimerViewModel extends Notifier<TimerState> {
           state = state.copyWith(
               timerModel: state.timerModel
                   .copyWith(focusTime: state.timerModel.focusTime - 1));
+
+          // Update the notification every second while the timer is running
+          NotificationService().showOngoingTimerNotification(
+              title: "Focus Timer:",
+              payload: 'focus',
+              secondsRemaining: state.timerModel.focusTime);
         } else {
           // Timer finished
           timer.cancel();
+
+          // Cancel the notification when the timer finishes.
+          NotificationService().cancelNotification();
+
+          // insert timespent and cyclecount into database
           completeFocusPomodoroSession();
+
+          // Show a notification when the Focus session is completed
           NotificationService().showNotification(
             title: 'PomodoroStreak',
             body: 'Focus session completed! Time for a break. 🎉',
           );
+
+          // Switch to Break Mode after Focus Timer ends
           ref
               .read(toggleFocusBreakModeProvider.notifier)
               .setBreakMode(); // Switch to Break Mode after Focus Timer ends
@@ -118,6 +133,9 @@ class FocusTimerViewModel extends Notifier<TimerState> {
 
         // Otherwise, update the state to pause the timer.
         state = state.copyWith(isPaused: true, isRunning: false);
+
+        // Cancel notification when timer is reset.
+        NotificationService().cancelNotification();
       }
     });
   }
@@ -145,6 +163,10 @@ class FocusTimerViewModel extends Notifier<TimerState> {
   // Reset the timer
   void resetFocusTimer() {
     _timer?.cancel();
+
+    // Cancel notification when timer is reset.
+    NotificationService().cancelNotification();
+
     state = state.copyWith(
       isRunning: false,
       isPaused: false,
@@ -179,14 +201,6 @@ class FocusTimerViewModel extends Notifier<TimerState> {
       timeSpentToday,
       DateTime.now(),
     );
-
-    // // Update state
-    // state = state.copyWith(
-    //   timerModel: state.timerModel.copyWith(
-    //     cyclesToday: cyclesToday,
-    //     timeSpentToday: timeSpentToday,
-    //   ),
-    // );
 
     // Fetch and update data for the current selected timeline
     fetchFocusModeData(state.selectedTimeline);
