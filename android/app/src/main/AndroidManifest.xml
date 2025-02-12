@@ -3,6 +3,9 @@
      <!-- POST_NOTIFICATIONS permission -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- VIBRATION permission -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:label="PomodoroStreak"
         android:name="${applicationName}"

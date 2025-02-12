@@ -1,4 +1,14 @@
 {
     "cmake.ignoreCMakeListsMissing": true,
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "cSpell.words": [
+        "bottomsheet",
+        "cyclecount",
+        "focusbreak",
+        "pomodoro",
+        "pomodoros",
+        "timespent",
+        "viewmodel"
+    ]
 }
