@@ -9,9 +9,12 @@
 - Stores session data in a local database (SQLite).
 - Custom Bottom sheet for selecting timeline options (Today, This Week, etc.).
 - Notifications after each session is completed.
+- Notifications while live timer session is running.
 - Responsive UI with a clean and intuitive design.
 - Minimalistic Dark Theme
 - Information about the Pomodoro Technique.
+- Tablet device support
+- haptics vibration on start, pause, stop, reset, focus, break, information buttons
 
 ## Mobile Screenshots
 <img src="./FocusMode_Screenshot_Mobile.png" alt="Focus Mode" width="50%"/>
@@ -86,14 +89,12 @@ flutter pub get
 
 
 ## Features to be added in future versions
-- [ ] Tablet device support
+
 - [ ] Screen Always on while Timer is Running
-- [ ] Display Pomodoro remaining Timer on LockScreen While Running
 - [ ] different sounds to select from to play after Timer duration Completes
-- [ ] haptics on start, pause, stop, focus, break, information buttons
 - [ ] dark and light theme button to toggle
-- [ ] add some glitter or crackers effect to it after the timer finishes or   background screen should blink with diff colours 
-- [ ] when timer reaches 10 sec it should pop with diff colours and change big small
+- [ ] add some glitter or crackers effect to it after the timer finishes or background screen should blink with diff colors 
+- [ ] when timer reaches 10 sec it should pop with diff colors and change big small
 - [ ] a small card to flex your productivity when you created a good streak
 - [ ] daily reminder to use pomodoro timer
 - [ ] when user taps on start button a beep sound should be played to indicate that the timer is running
