@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,6 +10,7 @@ import 'package:pomodoro_streak/viewmodels/focus_timer_viewmodel.dart';
 import 'package:pomodoro_streak/viewmodels/timeline_selection_viewmodel.dart';
 
 import 'package:pomodoro_streak/views/widgets/timeline_bottom_sheet_widget.dart';
+import 'package:vibration/vibration.dart';
 
 class FocusModeWidget extends ConsumerStatefulWidget {
   const FocusModeWidget({super.key});
@@ -148,6 +152,10 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                       ),
                       IconButton(
                         onPressed: () {
+                          if (Platform.isAndroid) {
+                            // Haptic Feedback on tapped
+                            Vibration.vibrate(duration: 30);
+                          }
                           timelineBottomSheetWidget(
                               context, ref); // show the bottom sheet
                         },
@@ -186,6 +194,10 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                 onTap: focusModeTimerState.isRunning
                     ? null // Disable when timer is running
                     : () {
+                        if (Platform.isAndroid) {
+                          // Haptic Feedback on tapped
+                          Vibration.vibrate(duration: 30);
+                        }
                         focusModeTimerActions.updateFocusTimeOption(time);
                       },
                 child: Container(
@@ -263,6 +275,10 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
             !focusModeTimerState.isPaused)
           ElevatedButton(
             onPressed: () {
+              if (Platform.isAndroid) {
+                // Haptic Feedback on tapped
+                Vibration.vibrate(duration: 120);
+              }
               focusModeTimerActions.startFocusTimer();
             },
             style: ElevatedButton.styleFrom(
@@ -284,6 +300,10 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                     (focusModeTimerState.selectedFocusTimeOption * 60)))
           ElevatedButton(
             onPressed: () {
+              if (Platform.isAndroid) {
+                // Haptic Feedback on tapped
+                Vibration.vibrate(duration: 80);
+              }
               focusModeTimerActions.pauseFocusTimer();
             },
             style: OutlinedButton.styleFrom(
@@ -307,6 +327,10 @@ class _FocusModeWidgetState extends ConsumerState<FocusModeWidget> {
                 (focusModeTimerState.selectedFocusTimeOption * 60))
           ElevatedButton(
             onPressed: () {
+              if (Platform.isAndroid) {
+                // Haptic Feedback on tapped
+                Vibration.vibrate(duration: 80);
+              }
               focusModeTimerActions.resumeFocusTimer();
             },
             style: ElevatedButton.styleFrom(

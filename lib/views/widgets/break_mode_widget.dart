@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +9,7 @@ import 'package:pomodoro_streak/viewmodels/break_timer_viewmodel.dart';
 import 'package:pomodoro_streak/viewmodels/timeline_selection_viewmodel.dart';
 
 import 'package:pomodoro_streak/views/widgets/timeline_bottom_sheet_widget.dart';
+import 'package:vibration/vibration.dart';
 
 class BreakModeWidget extends ConsumerStatefulWidget {
   const BreakModeWidget({super.key});
@@ -146,6 +149,10 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
                       ),
                       IconButton(
                         onPressed: () {
+                          if (Platform.isAndroid) {
+                            // Haptic Feedback on tapped
+                            Vibration.vibrate(duration: 30);
+                          }
                           timelineBottomSheetWidget(
                               context, ref); // show bottom sheet
                         },
@@ -184,6 +191,10 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
                 onTap: breakModeTimerState.isRunning
                     ? null // Disable when timer is running
                     : () {
+                        if (Platform.isAndroid) {
+                          // Haptic Feedback on tapped
+                          Vibration.vibrate(duration: 30);
+                        }
                         breakModeTimerActions.updateBreakTimeOption(time);
                       },
                 child: Container(
@@ -261,6 +272,10 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
             !breakModeTimerState.isPaused)
           ElevatedButton(
             onPressed: () {
+              if (Platform.isAndroid) {
+                // Haptic Feedback on tapped
+                Vibration.vibrate(duration: 120);
+              }
               breakModeTimerActions.startBreakTimer();
             },
             style: ElevatedButton.styleFrom(
@@ -283,6 +298,10 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
                     (breakModeTimerState.selectedBreakTimeOption * 60)))
           ElevatedButton(
             onPressed: () {
+              if (Platform.isAndroid) {
+                // Haptic Feedback on tapped
+                Vibration.vibrate(duration: 80);
+              }
               breakModeTimerActions.pauseBreakTimer();
             },
             style: OutlinedButton.styleFrom(
@@ -306,6 +325,10 @@ class _BreakModeWidgetState extends ConsumerState<BreakModeWidget> {
                 (breakModeTimerState.selectedBreakTimeOption * 60))
           ElevatedButton(
             onPressed: () {
+              if (Platform.isAndroid) {
+                // Haptic Feedback on tapped
+                Vibration.vibrate(duration: 80);
+              }
               breakModeTimerActions.resumeBreakTimer();
             },
             style: ElevatedButton.styleFrom(

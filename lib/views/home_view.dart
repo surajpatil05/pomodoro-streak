@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +11,7 @@ import 'package:pomodoro_streak/viewmodels/toggle_focusbreak_mode_viewmodel.dart
 
 import 'package:pomodoro_streak/views/widgets/break_mode_widget.dart';
 import 'package:pomodoro_streak/views/widgets/focus_mode_widget.dart';
+import 'package:vibration/vibration.dart';
 
 class HomeView extends ConsumerWidget {
   const HomeView({super.key});
@@ -43,6 +46,10 @@ class HomeView extends ConsumerWidget {
                 onPressed: timerState.isRunning || timerState.isPaused
                     ? null
                     : () {
+                        if (Platform.isAndroid) {
+                          // Haptic Feedback on tapped
+                          Vibration.vibrate(duration: 50);
+                        }
                         toggleModeNotifier.setFocusMode();
                       },
                 child: Text(
@@ -57,6 +64,10 @@ class HomeView extends ConsumerWidget {
                 onPressed: timerState.isRunning || timerState.isPaused
                     ? null
                     : () {
+                        if (Platform.isAndroid) {
+                          // Haptic Feedback on tapped
+                          Vibration.vibrate(duration: 50);
+                        }
                         toggleModeNotifier.setBreakMode();
                       },
                 child: Text(
@@ -82,6 +93,10 @@ class HomeView extends ConsumerWidget {
                   size: 25.sp,
                 ),
                 onPressed: () {
+                  if (Platform.isAndroid) {
+                    // Haptic Feedback on tapped
+                    Vibration.vibrate(duration: 50);
+                  }
                   // Show the dialog when the help button is pressed
                   showDialog(
                     context: context,
@@ -161,6 +176,10 @@ class HomeView extends ConsumerWidget {
                                       ),
                                     ),
                                     onPressed: () {
+                                      if (Platform.isAndroid) {
+                                        // Haptic Feedback on tapped
+                                        Vibration.vibrate(duration: 30);
+                                      }
                                       Navigator.of(context)
                                           .pop(); // Close the dialog
                                     },
@@ -192,6 +211,10 @@ class HomeView extends ConsumerWidget {
                   size: 25.sp,
                 ),
                 onPressed: () async {
+                  if (Platform.isAndroid) {
+                    // Haptic Feedback on tapped
+                    Vibration.vibrate(duration: 100);
+                  }
                   if (isFocusMode) {
                     (timerNotifier as FocusTimerViewModel)
                         .resetFocusTimer(); // reset focus timer
