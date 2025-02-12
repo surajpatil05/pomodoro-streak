@@ -29,7 +29,7 @@ class BreakTimerViewModel extends Notifier<TimerState> {
       selectedBreakTimeOption: 5,
       selectedTimeline: 'Today',
       timerModel: TimerModel(
-        //Initialize TimerModel inside TimerState
+        // Initialize TimerModel inside TimerState
         focusTime: 25 * 60, // 25 minutes
         breakTime: 5 * 60, // 5 minutes
         cyclesToday: 0,
@@ -86,15 +86,29 @@ class BreakTimerViewModel extends Notifier<TimerState> {
           state = state.copyWith(
               timerModel: state.timerModel
                   .copyWith(breakTime: state.timerModel.breakTime - 1));
+
+          // Update the notification every second while the timer is running
+          NotificationService().showOngoingTimerNotification(
+              title: "Break Timer:",
+              payload: 'break',
+              secondsRemaining: state.timerModel.breakTime);
         } else {
           // Timer finished
           timer.cancel();
+
+          // Cancel the notification when the timer finishes.
+          NotificationService().cancelNotification();
+
+          // insert timespent and cyclecount into database
           completeBreakPomodoroSession();
+
+          // Show a notification when the Break session is completed
           NotificationService().showNotification(
             title: 'PomodoroStreak',
             body: 'Break over! Time to focus again. 🔥',
           );
 
+          // Switch to Focus Mode after Break Timer ends
           ref
               .read(toggleFocusBreakModeProvider.notifier)
               .setFocusMode(); // Switch to Focus Mode after Break Timer ends
@@ -119,6 +133,9 @@ class BreakTimerViewModel extends Notifier<TimerState> {
 
         // Otherwise, update the state to pause the timer.
         state = state.copyWith(isPaused: true, isRunning: false);
+
+        // Cancel notification when timer is reset.
+        NotificationService().cancelNotification();
       }
     });
   }
@@ -146,6 +163,10 @@ class BreakTimerViewModel extends Notifier<TimerState> {
   // reset the break
   void resetBreakTimer() {
     _timer?.cancel();
+
+    // Cancel notification when timer is reset
+    NotificationService().cancelNotification();
+
     state = state.copyWith(
       isRunning: false,
       isPaused: false,
@@ -176,13 +197,6 @@ class BreakTimerViewModel extends Notifier<TimerState> {
       timeSpentToday,
       DateTime.now(),
     );
-
-    // state = state.copyWith(
-    //   timerModel: state.timerModel.copyWith(
-    //     cyclesToday: cyclesToday,
-    //     timeSpentToday: timeSpentToday,
-    //   ),
-    // );
 
     // Fetch and update data for the current selected timeline
     fetchBreakModeData(state.selectedTimeline);
