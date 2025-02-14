@@ -52,14 +52,14 @@ flutter run
 ```
 
 ## 💡 Usage Guide
-🎯 Start a Focus Session → Tap the Start Button under Focus Mode.
-☕ Switch to Break Mode → Tap the Break Mode tab.
-📊 View Session Statistics → Open the Bottom Sheet to select Today, This Week, etc.
+- 🎯 Start a Focus Session → Tap the Start Button under Focus Mode.
+- ☕ Switch to Break Mode → Tap the Break Mode tab.
+- 📊 View Session Statistics → Open the Bottom Sheet to select Today, This Week, etc.
 
 ## 📦 Dependencies
 The following Flutter packages power PomodoroStreak:
 
-### Package	Purpose
+### Packages
 - cupertino_icons	iOS-style icons
 - flutter_riverpod	State Management
 - sqflite	Local database management
@@ -75,23 +75,23 @@ flutter pub get
 ## 🚀 Future Enhancements
 ✅ Below are some exciting features planned for upcoming versions of PomodoroStreak:
 
-📱 Screen Always On → Prevent screen from locking while timer runs.
-🔔 Custom Timer Completion Sounds → Allow users to select different alert tones.
-🌗 Dark/Light Mode Toggle → Add a theme switch for UI customization.
-🎉 Celebratory Animations → Show glitter or flashing background on completion.
-⏳ Final 10-Second Effect → Timer pulses, changes colors, and animates.
-🏆 Streak Achievement Card → Show motivational messages on long streaks.
-🔔 Daily Reminder Notifications → Remind users to stay productive.
-📢 Beep Sound on Start → Indicate the timer has started.
-⭐ In-App Review Prompt → Ask users for feedback after frequent usage.
-ℹ️ App Version & Build Info → Display app version at the bottom.
+-📱 Screen Always On → Prevent screen from locking while timer runs.
+-🔔 Custom Timer Completion Sounds → Allow users to select different alert tones.
+-🌗 Dark/Light Mode Toggle → Add a theme switch for UI customization.
+-🎉 Celebratory Animations → Show glitter or flashing background on completion.
+-⏳ Final 10-Second Effect → Timer pulses, changes colors, and animates.
+-🏆 Streak Achievement Card → Show motivational messages on long streaks.
+-🔔 Daily Reminder Notifications → Remind users to stay productive.
+-📢 Beep Sound on Start → Indicate the timer has started.
+-⭐ In-App Review Prompt → Ask users for feedback after frequent usage.
+-ℹ️ App Version & Build Info → Display app version at the bottom.
 
 ## 🔧 Planned Fixes & Improvements
 ✅ Below are some improvements & bug fixes planned for the next update:
 
-🔄 Move Reset Button → Relocate below the Start button for easier access.
-📅 Fix Weekly,Monthly,All Time Display Issue → Ensure "This Week", "This Month", "All Time" fits in one line when selected from dropdown.
-⏯ Pause & Resume in Notifications → Add pause/resume buttons.
-📌 Improve Dropdown Filters → Remove gaps to show all options at once.
-⏳ Enhance Timer UI → Make animations smoother & interactive.
-💡 Daily Motivation Quote → Show an inspiring quote at the top.
+-🔄 Move Reset Button → Relocate below the Start button for easier access.
+-📅 Fix Weekly,Monthly,All Time Display Issue → Ensure "This Week", "This Month", "All Time" fits in one line when selected from dropdown.
+-⏯ Pause & Resume in Notifications → Add pause/resume buttons.
+-📌 Improve Dropdown Filters → Remove gaps to show all options at once.
+-⏳ Enhance Timer UI → Make animations smoother & interactive.
+-💡 Daily Motivation Quote → Show an inspiring quote at the top.
