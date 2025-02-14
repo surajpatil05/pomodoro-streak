@@ -4,6 +4,21 @@
 ## 📖 Description  
 **PomodoroStreak** is a time management app based on the **Pomodoro Technique**, designed to boost productivity by breaking work into **focused intervals** with **scheduled breaks**.  
 
+## 📲 Download PomodoroStreak  
+Experience **enhanced productivity** with PomodoroStreak! Get it now on the **Google Play Store**:
+
+<a href="https://play.google.com/store/apps/details?id=com.skyverse.pomodoro_streak">
+  <img src="https://img.shields.io/badge/Download_on_Google_Play-4285F4?style=for-the-badge&logo=google-play&logoColor=white" alt="Google Play Badge"/>
+</a>
+
+- 📌 **Total Downloads:** 1+  
+- ⭐ **Average Rating:** N/A  
+
+![App Banner](./assets/promo_banner.png)  
+
+### **Or Scan the QR Code to Download**
+<img src="./assets/qr_code.png" alt="QR Code" width="200px"/>
+
 ## 🚀 Features  
 
 - ✅ **Customizable Focus & Break Sessions** → Set custom session durations.  
