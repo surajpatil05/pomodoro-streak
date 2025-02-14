@@ -60,13 +60,15 @@ flutter run
 The following Flutter packages power PomodoroStreak:
 
 ### Packages
-- cupertino_icons	iOS-style icons
-- flutter_riverpod	State Management
-- sqflite	Local database management
-- path	File system path handling
-- intl	Date & time formatting
-- flutter_local_notifications	Local notifications
-- permission_handler	Permission management
+| Package                        | Purpose                                 |
+|--------------------------------|-----------------------------------------|
+| `cupertino_icons`             | iOS-style icons                         |
+| `flutter_riverpod`            | State Management                        |
+| `sqflite`                      | Local database management               |
+| `path`                         | File system path handling               |
+| `intl`                         | Date & time formatting                  |
+| `flutter_local_notifications`  | Local notifications                     |
+| `permission_handler`           | Permission management                   |
 
 ### 📌 To install all dependencies, run:
 ```
