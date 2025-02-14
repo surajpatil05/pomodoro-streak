@@ -37,18 +37,18 @@
 ### 1️⃣ Clone the Repository  
 ```bash
 git clone https://github.com/your-username/pomodoro-timer.git
-
-2️⃣ Navigate to the Project Directory
-
-   cd pomodoro-streak
-
-3️⃣ Install Dependencies
-
-   flutter pub get
-
-4️⃣ Run the App
-
-   flutter run
+```
+### 2️⃣ Navigate to the Project Directory
+```
+cd pomodoro-streak
+```
+### 3️⃣ Install Dependencies
+```
+flutter pub get
+```
+### 4️⃣ Run the App
+```
+flutter run
 ```
 
 ## 💡 Usage Guide
@@ -60,13 +60,13 @@ git clone https://github.com/your-username/pomodoro-timer.git
 The following Flutter packages power PomodoroStreak:
 
 ### Package	Purpose
-cupertino_icons	iOS-style icons
-flutter_riverpod	State Management
-sqflite	Local database management
-path	File system path handling
-intl	Date & time formatting
-flutter_local_notifications	Local notifications
-permission_handler	Permission management
+- cupertino_icons	iOS-style icons
+- flutter_riverpod	State Management
+- sqflite	Local database management
+- path	File system path handling
+- intl	Date & time formatting
+- flutter_local_notifications	Local notifications
+- permission_handler	Permission management
 
 ### 📌 To install all dependencies, run:
 ```
