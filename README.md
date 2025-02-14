@@ -88,16 +88,32 @@ Run the following command to install the dependencies:
 flutter pub get
 
 
-## Features to be added in future versions
+## 🚀 Features to be Added in Future Versions  
 
-- [ ] Screen Always on while Timer is Running
-- [ ] different sounds to select from to play after Timer duration Completes
-- [ ] dark and light theme button to toggle
-- [ ] add some glitter or crackers effect to it after the timer finishes or background screen should blink with diff colors 
-- [ ] when timer reaches 10 sec it should pop with diff colors and change big small
-- [ ] a small card to flex your productivity when you created a good streak
-- [ ] daily reminder to use pomodoro timer
-- [ ] when user taps on start button a beep sound should be played to indicate that the timer is running
-- [ ] show in_app_review popup when user use app for sometime use some launch times to display the review popup after a week or so
-- [ ] add app version and build number in the bottom of the app to let user know which version they are on.
+✅ Below are some exciting features planned for upcoming versions of PomodoroStreak:  
+
+- [ ] **Screen Always On** → Keep the screen awake while the timer is running.  
+- [ ] **Custom Timer Completion Sounds** → Allow users to **select different sounds** after the timer ends.  
+- [ ] **Dark/Light Mode Toggle** → Add a **theme switch button** for easy UI customization.  
+- [ ] **Celebratory Effects** → Add **glitter/crackers animations** or a **flashing background** when the timer completes.  
+- [ ] **Final 10-Second Effect** → When the timer reaches **10 seconds**, make it **pop, change colors, and animate** in size.  
+- [ ] **Streak Achievement Card** → Display a **small card** to flex the user's productivity streak.  
+- [ ] **Daily Reminder** → Send a **push notification** reminding users to use the Pomodoro timer.  
+- [ ] **Start Timer Beep Sound** → Play a **beep sound** when the user taps the **Start** button.  
+- [ ] **In-App Review Prompt** → Show a **review popup** after a certain number of app launches (e.g., after a week of use).  
+- [ ] **App Version & Build Info** → Display **app version & build number** at the bottom of the app UI.  
+
+
+
+## 📌 Future Fixes & Improvements  
+✅ Below are some planned enhancements for the PomodoroStreak app:
+
+- [ ] **Move Reset Button** → Place it below the **Start** button instead of in the top right corner.  
+- [ ] **Fix Weekly Display Issue** → Ensure "This Week" is displayed in **one line** instead of two.  
+- [ ] **Pause & Resume in Timer Notification** → Add a **pause/resume** button directly in notifications.  
+- [ ] **Improve Dropdown Filters** → Remove unnecessary gaps so that all options are **visible at once**.  
+- [ ] **Enhance Timer UI** → Make the timer and its **duration selection animations more interactive**.  
+- [ ] **Daily Motivation** → Display a **"Quote of the Day"** at the top of the app to keep users inspired.  
+
+
 
