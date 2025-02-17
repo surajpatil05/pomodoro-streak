@@ -16,7 +16,7 @@ Experience **enhanced productivity** with PomodoroStreak! Get it now on the **Go
 ![App Banner](./app_screenshots/promo-banner.png)  
 
 ### **Or Scan the QR Code to Download**
-<img src="./app_screenshots/qr-code.png" alt="QR Code" width="200px"/>
+<img src="./app_screenshots/qr-code.jpg" alt="QR Code" width="200px"/>
 
 ## 🚀 Features  
 
