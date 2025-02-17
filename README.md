@@ -10,8 +10,8 @@ Experience **enhanced productivity** with PomodoroStreak! Get it now on the **Go
   <img src="https://img.shields.io/badge/Download_on_Google_Play-4285F4?style=for-the-badge&logo=google-play&logoColor=white" alt="Google Play Badge"/>
 </a>
 
-📌 **Total Downloads:** 5+ 
-⭐ **Average Rating:** N/A  
+- 📌 **Total Downloads:** 5+ 
+- ⭐ **Average Rating:** N/A  
 
 ![App Banner](./app_screenshots/promo-banner.png)  
 
@@ -66,12 +66,12 @@ Experience **enhanced productivity** with PomodoroStreak! Get it now on the **Go
    ```
 
 ### 💡 Usage Guide
-## Usage
 ```bash
 🎯 Start a Focus Session → Tap the Start Button under Focus Mode.
 ☕ Switch to Break Mode → Tap the Break Mode tab.
 📊 View Session Statistics → Open the Bottom Sheet to select Today, This Week, etc.
 ```
+
 
 ### 📦 Dependencies
 
@@ -87,6 +87,7 @@ The following Flutter packages power PomodoroStreak:
 | `flutter_local_notifications`  | Local notifications                     |
 | `permission_handler`           | Permission management                   |
 
+
 ### Installing Dependencies
 
 Run the following command to install the dependencies:
@@ -94,6 +95,7 @@ Run the following command to install the dependencies:
 ```bash
 flutter pub get
 ```
+
 
 ### 🚀 Future Enhancements
 
@@ -109,6 +111,7 @@ flutter pub get
 - 📢 Beep Sound on Start → Indicate that the timer has started.
 - ⭐ In-App Review Prompt → Ask users for feedback after frequent usage.
 - ℹ️ App Version & Build Info → Display app version at the bottom.
+
 
 ### 🔧 Planned Fixes & Improvements
 
