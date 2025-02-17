@@ -47,6 +47,7 @@ Experience **enhanced productivity** with PomodoroStreak! Get it now on the **Go
   <img src="./app_screenshots/infoScreen_Screenshot_Tablet.png" alt="Information Dialogue" width="30%"/>  
 </p>  
 
+
 ## Installation
 1. Clone the repository:
    ```bash
