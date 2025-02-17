@@ -1,4 +1,4 @@
-# Pomodoro_Streak App
+# PomodoroStreak App
 **PomodoroStreak** is a time management app based on the **Pomodoro Technique**, designed to boost productivity by breaking work into **focused intervals** with **scheduled breaks**.  
 
 ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
