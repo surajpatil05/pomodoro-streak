@@ -4,20 +4,20 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:pomodoro_streak/data/repository.dart';
+import 'package:pomodoro_streak/data/repositories/timer_repository.dart';
 
-import 'package:pomodoro_streak/data/models/timer_state.dart';
+import 'package:pomodoro_streak/models/timer_state.dart';
 
 import 'package:pomodoro_streak/services/notification_service.dart';
 
-import 'package:pomodoro_streak/data/models/timer_model.dart';
+import 'package:pomodoro_streak/models/timer_model.dart';
 
 import 'package:pomodoro_streak/viewmodels/toggle_focusbreak_mode_viewmodel.dart';
 
 // TimerNotifier class to manage the timer logic
 class FocusTimerViewModel extends Notifier<TimerState> {
   Timer? _timer;
-  final Repository _databaseHelper = Repository.instance;
+  final TimerRepository _databaseHelper = TimerRepository.instance;
 
   Timer? _debounceTimer; // Timer for debouncing
 

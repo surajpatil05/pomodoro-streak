@@ -17,14 +17,14 @@
 - haptics vibration on start, pause, stop, reset, focus, break, information buttons
 
 ## Mobile Screenshots
-<img src="./FocusMode_Screenshot_Mobile.png" alt="Focus Mode" width="50%"/>
-<img src="./BreakMode_Screenshot_Mobile.png" alt="Break Mode" width="50%"/>
-<img src="./infoScreen_Screenshot_Mobile.png" alt="information dialogue" width="50%"/>
+<img src="./app_screenshots/FocusMode_Screenshot_Mobile.png" alt="Focus Mode" width="50%"/>
+<img src="./app_screenshots/BreakMode_Screenshot_Mobile.png" alt="Break Mode" width="50%"/>
+<img src="./app_screenshots/infoScreen_Screenshot_Mobile.png" alt="information dialogue" width="50%"/>
 
 ## Tablet Screenshots
-<img src="./FocusMode_Screenshot_Tablet.png" alt="Focus Mode" width="50%"/>
-<img src="./BreakMode_Screenshot_Tablet.png" alt="Break Mode" width="50%"/>
-<img src="./infoScreen_Screenshot_Tablet.png" alt="information dialogue" width="50%"/>
+<img src="./app_screenshots/FocusMode_Screenshot_Tablet.png" alt="Focus Mode" width="50%"/>
+<img src="./app_screenshots/BreakMode_Screenshot_Tablet.png" alt="Break Mode" width="50%"/>
+<img src="./app_screenshots/infoScreen_Screenshot_Tablet.png" alt="information dialogue" width="50%"/>
 
 ## Installation
 1. Clone the repository:

@@ -1,4 +1,4 @@
-import 'package:pomodoro_streak/data/models/timer_model.dart';
+import 'package:pomodoro_streak/models/timer_model.dart';
 
 class TimerState {
   final bool isRunning;

@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'package:sqflite/sqflite.dart';
 
-import 'db_creation.dart';
+import '../local/database_helper.dart';
 
-class Repository {
-  static final Repository instance = Repository._init();
+class TimerRepository {
+  static final TimerRepository instance = TimerRepository._init();
 
-  Repository._init();
+  TimerRepository._init();
 
-  Future<Database> get _database async => await DbCreation.instance.database;
+  Future<Database> get _database async =>
+      await DatabaseHelper.instance.database;
 
   Future<List<Map<String, dynamic>>> rawQuery(String query) async {
     final db = await _database;

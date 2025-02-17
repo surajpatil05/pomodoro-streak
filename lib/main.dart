@@ -8,7 +8,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:pomodoro_streak/data/repository.dart';
+import 'package:pomodoro_streak/data/repositories/timer_repository.dart';
 
 import 'package:pomodoro_streak/viewmodels/app_update_viewmodel.dart';
 
@@ -48,11 +48,11 @@ void main() async {
 
   // fetch all focus_mode table data
   List<Map<String, dynamic>> focusModeData =
-      await Repository.instance.fetchAllFocusModeData();
+      await TimerRepository.instance.fetchAllFocusModeData();
 
   // fetch all break_mode table data
   List<Map<String, dynamic>> breakModeData =
-      await Repository.instance.fetchAllBreakModeData();
+      await TimerRepository.instance.fetchAllBreakModeData();
 
   // print all focus_mode table data in debug console
   debugPrint(focusModeData.toString());

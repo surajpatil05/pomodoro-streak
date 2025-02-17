@@ -3,11 +3,13 @@
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.compile.nullAnalysis.mode": "automatic",
     "cSpell.words": [
+        "AUTOINCREMENT",
         "bottomsheet",
         "cyclecount",
         "focusbreak",
         "pomodoro",
         "pomodoros",
+        "skyverse",
         "timespent",
         "viewmodel"
     ]
