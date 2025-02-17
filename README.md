@@ -6,7 +6,7 @@
 ## 📲 Download PomodoroStreak  
 Experience **enhanced productivity** with PomodoroStreak! Get it now on the **Google Play Store**:
 
-<a href="https://play.google.com/store/apps/details?id=com.skyverse.pomodorostreak">
+<a href="https://play.google.com/store/apps/details?id=com.skyverse.pomodoro_streak">
   <img src="https://img.shields.io/badge/Download_on_Google_Play-4285F4?style=for-the-badge&logo=google-play&logoColor=white" alt="Google Play Badge"/>
 </a>
 
