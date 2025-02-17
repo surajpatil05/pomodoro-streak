@@ -69,11 +69,10 @@ Experience **enhanced productivity** with PomodoroStreak! Get it now on the **Go
 
 
 ### 💡 Usage Guide
-```bash
-🎯 Start a Focus Session → Tap the Start Button under Focus Mode.
-☕ Switch to Break Mode → Tap the Break Mode tab.
-📊 View Session Statistics → Open the Bottom Sheet to select Today, This Week, etc.
-```
+
+- 🎯 Start a Focus Session → Tap the Start Button under Focus Mode.
+- ☕ Switch to Break Mode → Tap the Break Mode tab.
+- 📊 View Session Statistics → Open the Bottom Sheet to select Today, This Week, etc.
 
 
 ### 📦 Dependencies
@@ -93,15 +92,6 @@ The following Flutter packages power PomodoroStreak:
 | `flutter_native_splash`        | Custom splash screen                      |
 | `in_app_update`                | Handling in-app updates                   |
 | `vibration`                    | Vibration feedback for haptic interactions |
-
-
-### Installing Dependencies
-
-Run the following command to install the dependencies:
-
-```bash
-flutter pub get
-```
 
 
 ### 🚀 Future Enhancements
