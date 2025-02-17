@@ -19,6 +19,8 @@ Experience **enhanced productivity** with PomodoroStreak! Get it now on the **Go
 ### **Or Scan the QR Code to Download**
 <img src="./app_screenshots/qr-code.jpg" alt="QR Code" width="200px"/>
 
+---
+
 ## 🚀 Features  
 
 - **Customizable Focus & Break Sessions** → Set custom session durations.  
@@ -31,6 +33,7 @@ Experience **enhanced productivity** with PomodoroStreak! Get it now on the **Go
 - **Tablet Support** → Optimized layout for larger screens.  
 - **Haptic Feedback** → Subtle vibrations for important actions.  
 
+---
 
 ## 📱 Screenshots  
 
@@ -48,6 +51,7 @@ Experience **enhanced productivity** with PomodoroStreak! Get it now on the **Go
   <img src="./app_screenshots/infoScreen_Screenshot_Tablet.png" alt="Information Dialogue" width="30%"/>  
 </p>  
 
+---
 
 ## Installation
 1. Clone the repository:
@@ -67,6 +71,8 @@ Experience **enhanced productivity** with PomodoroStreak! Get it now on the **Go
    flutter run
    ```
 
+---
+
 ### 💡 Usage Guide
 ```bash
 🎯 Start a Focus Session → Tap the Start Button under Focus Mode.
@@ -74,6 +80,7 @@ Experience **enhanced productivity** with PomodoroStreak! Get it now on the **Go
 📊 View Session Statistics → Open the Bottom Sheet to select Today, This Week, etc.
 ```
 
+---
 
 ### 📦 Dependencies
 
@@ -98,6 +105,7 @@ Run the following command to install the dependencies:
 flutter pub get
 ```
 
+---
 
 ### 🚀 Future Enhancements
 
@@ -114,6 +122,7 @@ flutter pub get
 - ⭐ In-App Review Prompt → Ask users for feedback after frequent usage.
 - ℹ️ App Version & Build Info → Display app version at the bottom.
 
+---
 
 ### 🔧 Planned Fixes & Improvements
 
