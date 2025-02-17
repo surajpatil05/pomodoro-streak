@@ -80,15 +80,19 @@ Experience **enhanced productivity** with PomodoroStreak! Get it now on the **Go
 
 The following Flutter packages power PomodoroStreak:
 
-| Package                        | Purpose                                 |
-|--------------------------------|-----------------------------------------|
-| `cupertino_icons`             | iOS-style icons                         |
-| `flutter_riverpod`            | State Management                        |
-| `sqflite`                      | Local database management               |
-| `path`                         | File system path handling               |
-| `intl`                         | Date & time formatting                  |
-| `flutter_local_notifications`  | Local notifications                     |
-| `permission_handler`           | Permission management                   |
+| Package                        | Purpose                                   |
+|--------------------------------|-------------------------------------------|
+| `cupertino_icons`             | iOS-style icons                           |
+| `flutter_riverpod`            | State management                         |
+| `sqflite`                      | Local database management                 |
+| `path`                         | File system path handling                 |
+| `intl`                         | Date & time formatting                    |
+| `flutter_local_notifications`  | Local notifications                       |
+| `permission_handler`           | Permission management                     |
+| `flutter_screenutil`           | Responsive UI scaling                     |
+| `flutter_native_splash`        | Custom splash screen                      |
+| `in_app_update`                | Handling in-app updates                   |
+| `vibration`                    | Vibration feedback for haptic interactions |
 
 
 ### Installing Dependencies
