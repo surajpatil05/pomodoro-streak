@@ -119,7 +119,14 @@ The following Flutter packages power PomodoroStreak:
 - ⏯ Pause & Resume in Notifications → Add pause/resume buttons.
 - 📌 Improve Dropdown Filters → Remove gaps to show all options at once.
 - ⏳ Enhance Timer UI → Make animations smoother & interactive.
-- 💡 Daily Motivation Quote → Show an inspiring quote at the top.  
+- 💡 Daily Motivation Quote → Show an inspiring quote at the top.
+- 📲 Guided Tour for First-Time Users → Add onboarding screens explaining Focus Mode, Break Streak, and other features.
 
+### 🐛 Bug Fixes
 
-
+- 🔄 Fix Screen Rotation Issues → Ensure the timer UI remains stable when rotating the device. (or turn off this feature)
+- 📏 Fix Timeline Text Alignment → Adjust text to display correctly without overlapping.
+- 🖥 Improve Split-Screen Mode → Ensure smooth UI behavior when using split-screen. (or turn off this feature)
+- ⚠ Prompt Before Closing Timer → Warn users before exiting while a session is running.
+- ❌ Clear Live Timer Notification After App Is Killed → Remove persistent notifications when the app is closed.
+- 🚫 Fix App Crash on Notification Click (After Killing App) → Ensure clicking a notification doesn’t crash the app.
