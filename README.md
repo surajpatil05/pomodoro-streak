@@ -132,3 +132,6 @@ The following Flutter packages power PomodoroStreak:
 - 🚫 Fix App Crash on Notification Click (After Killing App) → Ensure clicking a notification doesn’t crash the app.
 - 🔒 Lockscreen timer not visible → Live timer notification not visible on lockscreen.
 - 📱 Phone vibrates while timer running → Resolve unexpected vibrations during timer sessions.
+
+
+[![Tester: Snigdh](https://img.shields.io/badge/Tester-Snigdh-blue)](https://github.com/snigdhp)
