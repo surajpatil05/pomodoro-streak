@@ -133,5 +133,9 @@ The following Flutter packages power PomodoroStreak:
 - 🔒 Lockscreen timer not visible → Live timer notification not visible on lockscreen.
 - 📱 Phone vibrates while timer running → Resolve unexpected vibrations during timer sessions.
 
+### Testers
+I greatly appreciate the contributions of our testers who help ensure the quality and reliability of PomodoroStreak App.
 
-[![Tester: Snigdh](https://img.shields.io/badge/Tester-Snigdh-blue)](https://github.com/snigdhp)
+Here are our dedicated testers:
+
+- [![Tester: Snigdh](https://img.shields.io/badge/Tester-Snigdh-blue)](https://github.com/snigdhp)
