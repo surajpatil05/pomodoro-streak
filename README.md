@@ -130,3 +130,5 @@ The following Flutter packages power PomodoroStreak:
 - ⚠ Prompt Before Closing Timer → Warn users before exiting while a session is running.
 - ❌ Clear Live Timer Notification After App Is Killed → Remove persistent notifications when the app is closed.
 - 🚫 Fix App Crash on Notification Click (After Killing App) → Ensure clicking a notification doesn’t crash the app.
+- 🔒 Lockscreen timer not visible → Live timer notification not visible on lockscreen.
+- 📱 Phone vibrates while timer running → Resolve unexpected vibrations during timer sessions.
