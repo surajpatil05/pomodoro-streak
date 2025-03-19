@@ -139,4 +139,4 @@ I greatly appreciate the contributions of our testers who help ensure the qualit
 Here are our dedicated testers:
 
 - [![Tester: Snigdh](https://img.shields.io/badge/Tester-Snigdh-blue)](https://github.com/snigdhp)
-- [![Tester: Snigdh](https://img.shields.io/badge/Tester-Snigdh-blue)](https://github.com/jayesh2020)
+- [![Tester: Jayesh](https://img.shields.io/badge/Tester-Snigdh-blue)](https://github.com/jayesh2020)
