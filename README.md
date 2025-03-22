@@ -111,27 +111,38 @@ The following Flutter packages power PomodoroStreak:
 
 
 ### 🔧 Planned Fixes & Improvements
+✅ Below are improvements and fixes planned for the next update:
 
-✅ Below are some improvements & bug fixes planned for the next update:
+- 🔄 Move Reset Button: Relocate below the Start button for easier access.
 
-- 🔄 Move Reset Button → Relocate below the Start button for easier access.
-- 📅 Fix Weekly, Monthly, All-Time Display Issue → Ensure "This Week", "This Month", "All Time" fits in one line when selected from dropdown.
-- ⏯ Pause & Resume in Notifications → Add pause/resume buttons.
-- 📌 Improve Dropdown Filters → Remove gaps to show all options at once.
-- ⏳ Enhance Timer UI → Make animations smoother & interactive.
-- 💡 Daily Motivation Quote → Show an inspiring quote at the top.
-- 📲 Guided Tour for First-Time Users → Add onboarding screens explaining Focus Mode, Break Streak, and other features.
+- 📅 Fix Weekly, Monthly, All-Time Display Issue: Ensure "This Week", "This Month", and "All Time" fit in one line when selected from the dropdown.
 
-### 🐛 Bug Fixes
+- ⏯ Pause & Resume in Notifications: Add pause/resume buttons for better control during sessions.
 
-- 🔄 Fix Screen Rotation Issues → Ensure the timer UI remains stable when rotating the device. (or turn off this feature)
-- 📏 Fix Timeline Text Alignment → Adjust text to display correctly without overlapping.
-- 🖥 Improve Split-Screen Mode → Ensure smooth UI behavior when using split-screen. (or turn off this feature)
-- ⚠ Prompt Before Closing Timer → Warn users before exiting while a session is running.
-- ❌ Clear Live Timer Notification After App Is Killed → Remove persistent notifications when the app is closed.
-- 🚫 Fix App Crash on Notification Click (After Killing App) → Ensure clicking a notification doesn’t crash the app.
-- 🔒 Lockscreen timer not visible → Live timer notification not visible on lockscreen.
-- 📱 Phone vibrates while timer running → Resolve unexpected vibrations during timer sessions.
+- 📌 Improve Dropdown Filters: Remove unnecessary gaps to display all options at once.
+
+- ⏳ Enhance Timer UI: Make animations smoother and more interactive.
+
+- 💡 Daily Motivation Quote: Display an inspiring quote at the top of the app to motivate users.
+
+- 📲 Guided Tour for First-Time Users: Add onboarding screens explaining Focus Mode, Break Streak, and other key features.
+
+- 🔄 Fix Screen Rotation Issues: Ensure the timer UI remains stable when rotating the device or consider disabling rotation.
+
+- 📏 Fix Timeline Text Alignment: Adjust text to prevent any overlapping or misalignment.
+
+- 🖥 Improve Split-Screen Mode: Ensure smooth UI behavior when using split-screen or consider disabling this feature.
+
+- ⚠ Prompt Before Closing Timer: Add a warning to prevent accidental exits while a session is running.
+
+- ❌ Clear Live Timer Notification After App Is Killed: Ensure persistent notifications are removed when the app is closed.
+
+- 🚫 Fix App Crash on Notification Click (After Killing App): Resolve crashes when clicking on notifications after the app has been force-closed.
+
+- 🔒 Live Timer Notification Not Visible on Lock Screen: Fix the issue so that the timer notification appears correctly on the lock screen.
+
+- 📱 Unexpected Phone Vibrations During Timer: Resolve unnecessary vibrations while the timer is running.
+
 
 ### Testers
 I greatly appreciate the contributions of our testers who help ensure the quality and reliability of PomodoroStreak App.
@@ -139,4 +150,5 @@ I greatly appreciate the contributions of our testers who help ensure the qualit
 Here are our dedicated testers:
 
 - [![Tester: Snigdh](https://img.shields.io/badge/Tester-Snigdh-blue)](https://github.com/snigdhp)
+
 - [![Tester: Jayesh](https://img.shields.io/badge/Tester-Jayesh-blue)](https://github.com/jayesh2020)
