@@ -61,5 +61,5 @@ jobs:
           token: ${{ secrets.TOKEN }}
 
 
-# push to master, main, develop
-# pull request on main master
+# push to master, main, develop.
+# pull request on main master.
