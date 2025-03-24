@@ -33,9 +33,10 @@ jobs:
 
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
-        shell: powershell
-
+          $base64Encoded = "${{ secrets.KEYSTORE_BASE64 }}"
+          [System.IO.File]::WriteAllBytes("keystore.jks", [System.Convert]::FromBase64String($base64Encoded))
+        shell: pwsh
+        
       - name: Cache Flutter Dependencies
         uses: actions/cache@v3
         with:
