@@ -14,7 +14,7 @@ on:
 jobs:
   build:
     name: Build APK & AAB Release
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -30,29 +30,31 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.27.0'
           channel: 'stable'
           architecture: x64
 
       - name: Decode Keystore
         run: |
-          echo $Env:KEYSTORE_BASE64 | base64 -d > keystore.jks
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
         shell: pwsh
 
       - name: Cache Flutter Dependencies
         uses: actions/cache@v3
         with:
-          path: |
-            ~/.pub-cache
-            build
+          path: ${{ env.FLUTTER_HOME }}/.pub-cache
           key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
-          restore-keys: |
+          restore-keys: | 
             ${{ runner.os }}-flutter-
 
+      - name: Get Flutter Dependencies
+        run: flutter pub get
+
       - name: Build APK
-        run: flutter build apk --release --split-per-abi
+        run: flutter build apk --release --split-per-abi || exit 1
 
       - name: Build AAB
-        run: flutter build appbundle --release
+        run: flutter build appbundle --release || exit 1
 
       - name: Push APK & AAB to Releases
         uses: ncipollo/release-action@v1
