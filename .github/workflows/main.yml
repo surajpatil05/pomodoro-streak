@@ -34,7 +34,7 @@ jobs:
       - name: Decode Keystore
         run: |
           $base64Encoded = "${{ secrets.KEYSTORE_BASE64 }}"
-          [System.IO.File]::WriteAllBytes("keystore.jks", [System.Convert]::FromBase64String($base64Encoded))
+          [System.IO.File]::WriteAllBytes("android/app/keystore.jks", [System.Convert]::FromBase64String($base64Encoded))
         shell: pwsh
         
       - name: Cache Flutter Dependencies
@@ -49,10 +49,10 @@ jobs:
         run: flutter pub get
 
       - name: Build APK
-        run: flutter build apk --release --split-per-abi || exit 1
+        run: flutter build apk --release --split-per-abi
 
       - name: Build AAB
-        run: flutter build appbundle --release || exit 1
+        run: flutter build appbundle --release
 
       - name: Push APK & AAB to Releases
         uses: ncipollo/release-action@v1
