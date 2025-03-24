@@ -34,7 +34,7 @@ jobs:
       - name: Decode Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
-        shell: pwsh
+        shell: powershell
 
       - name: Cache Flutter Dependencies
         uses: actions/cache@v3
