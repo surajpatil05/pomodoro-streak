@@ -30,10 +30,10 @@ android {
         versionName = flutter.versionName
     }
 
-    // Load the key.properties file
-    def keystorePropertiesFile = rootProject.file("key.properties")
-    def keystoreProperties = new Properties()
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    // // Load the key.properties file
+    // def keystorePropertiesFile = rootProject.file("key.properties")
+    // def keystoreProperties = new Properties()
+    // keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
     signingConfigs {
         release {
