@@ -3,18 +3,15 @@ name: "Build APK & AAB Release"
 on:
   pull_request:
     branches:
-      - main
       - master
   push:
     branches:
-      - main
       - master
-      - develop
 
 jobs:
   build:
     name: Build APK & AAB Release
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     env:
       STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
