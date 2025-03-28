@@ -144,13 +144,15 @@ jobs:
         run: del android/app/keystore.jks
 
 
+# Note: while committing changes include fix:, feat:, and chore: in the commit messages to mention the changes respectively
+
 # Workflow Steps:
 
   # Develop on Master: Make code changes, push to master (use PRs if master is protected).
 
   # Create Release Branch: When ready, branch from master as release/version (e.g., release/1.0.2), push to remote.
 
-  # Manual Release: In GitHub Actions Tab, run "Build APK & AAB Release," enter the release/version branch name.
+  # Manual Release: In GitHub "Actions" Tab, under "Build APK & AAB Release" Tab click on run workflow button," enter the release/version branch name.
 
   # Auto Release: Workflow builds APK/AAB, increments version, generates release notes, creates GitHub release, deletes keystore.
 
