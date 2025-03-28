@@ -1,42 +1,51 @@
 name: "Build APK & AAB Release"
 
+# Trigger the workflow on pull requests and pushes to the 'master' branch
 on:
   pull_request:
     branches:
-      - master
+      - release
   push:
     branches:
-      - master
+      - release
 
 jobs:
   build:
+
     name: Build APK & AAB Release
     runs-on: windows-latest
+
+    # Setting environment variables using GitHub secrets for secure access
     env:
       STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
       KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
 
     steps:
+       # Step 1: Check out the code from the repository
       - uses: actions/checkout@v3
 
+      # Step 2: Set up Java 17 using the Zulu distribution (required for Android builds)
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '17'
 
+      # Step 3: Set up Flutter using the Flutter action and specify version, channel, and architecture
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.0'
           channel: 'stable'
           architecture: x64
 
+      # Step 4: Decode the Keystore file (for signing the APK and AAB)
       - name: Decode Keystore
         run: |
           $base64Encoded = "${{ secrets.KEYSTORE_BASE64 }}"
           [System.IO.File]::WriteAllBytes("android/app/keystore.jks", [System.Convert]::FromBase64String($base64Encoded))
         shell: pwsh
         
+      # Step 5: Cache Flutter dependencies to speed up the build process
       - name: Cache Flutter Dependencies
         uses: actions/cache@v3
         with:
@@ -45,22 +54,95 @@ jobs:
           restore-keys: | 
             ${{ runner.os }}-flutter-
 
-      - name: Get Flutter Dependencies
-        run: flutter pub get
+      # Step 6: Increment the version in pubspec.yaml and update the build number
+      - name: Increment App Version
+        id: version
+        run: |
+          CURRENT_VERSION=$(grep '^version: ' pubspec.yaml | cut -d " " -f2)
+          echo "Current version: $CURRENT_VERSION"
 
-      - name: Build APK
-        run: flutter build apk --release --split-per-abi
+          # Increment the build number by 1
+          NEW_BUILD_NUMBER=$(( $(echo "$CURRENT_VERSION" | cut -d "+" -f2) + 1 ))
+          NEW_VERSION=$(echo "$CURRENT_VERSION" | sed -E "s/\+[0-9]+$/+$NEW_BUILD_NUMBER/")
 
-      - name: Build AAB
-        run: flutter build appbundle --release
+          echo "New version: $NEW_VERSION"
+          sed -i "s/^version: .*/version: $NEW_VERSION/" pubspec.yaml
 
-      - name: Push APK & AAB to Releases
+          echo "new-version=$NEW_VERSION" >> $GITHUB_ENV
+
+      # Step 7: Update Android build.gradle with new versionCode and versionName
+      - name: Update Android Version
+        run: |
+          sed -i "s/versionCode [0-9]\+/versionCode $NEW_BUILD_NUMBER/" android/app/build.gradle
+          sed -i "s/versionName \"[0-9.]\+\"/versionName \"$NEW_VERSION\"/" android/app/build.gradle
+
+      # Step 8: Commit updated pubspec.yaml and build.gradle, and push changes
+      - name: Commit and Push Updated pubspec.yaml and android/app/build.gradle
+        run: |
+          git config --local user.name "GitHub Actions"
+          git config --local user.email "actions@github.com"
+          git add pubspec.yaml android/app/build.gradle
+          git commit -m "Increment app version to $NEW_VERSION"
+          git push origin release
+
+      # Step 9: Generate Release Notes
+      - name: Generate Release Notes
+        id: changelog
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: commits } = await github.repos.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 10,
+            });
+
+            let changelog = "**Changelog:**\\n";
+
+            for (const commit of commits) {
+              const message = commit.commit.message;
+              // Include commit messages with specific prefixes: 'fix:', 'feat:', or 'chore:'
+              if (message.startsWith("feat:") || message.startsWith("fix:") || message.startsWith("chore:")) {
+                changelog += `- ${message}\\n`;
+              }
+            }
+            // Set the generated changelog as an output
+            core.setOutput("changelog", changelog || "No significant changes in this release.");
+          result-encoding: string
+
+      
+      # Step 10: Build the APK and AAB (Release Mode)
+      - name: Build APK and AAB
+        run: |
+          flutter clean
+          flutter pub get
+          flutter build apk --release
+          flutter build appbundle --release
+
+      # Step 11: Create GitHub Release (includes changelog and APK/AAB)
+      - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/apk/release/*.apk, build/app/outputs/bundle/release/*.aab"
-          tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
+          tag: v${{ steps.version.outputs.new-version }}
+          name: "Release v${{ steps.version.outputs.new-version }}"
+          draft: false
+          prerelease: false
+          body: |
+            **New Release Notes for Version ${{ steps.version.outputs.new-version }}**
+            
+            - Built APK and AAB files
+            - Updated app version to ${{ steps.version.outputs.new-version }}**
+            
+            ${{ steps.changelog.outputs.result }}
+          artifacts: |
+            android/app/build/outputs/apk/release/app-release.apk
+            android/app/build/outputs/bundle/release/app-release.aab
+
+      # delete the keystore file after the build
+      - name: Delete keystore.jks
+        run: del android/app/keystore.jks
 
 
-# push to master, main, develop
-# pull request on main master
+# push to master, main, develop, release
+# pull request on main master, release
