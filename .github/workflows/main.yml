@@ -1,13 +1,13 @@
 name: "Build APK & AAB Release"
 
-# Trigger the workflow on pull requests and pushes to the 'master' branch
+# Trigger the workflow manually via workflow_dispatch.
 on:
-  pull_request:
-    branches:
-      - release
-  push:
-    branches:
-      - release
+  workflow_dispatch:
+    inputs:
+      release_branch:
+        description: 'Release Branch (e.g., release/1.0.0)'
+        required: true
+        type: string
 
 jobs:
   build:
@@ -144,5 +144,14 @@ jobs:
         run: del android/app/keystore.jks
 
 
-# push to master, main, develop, release
-# pull request on main master, release
+# Workflow Steps:
+
+  # Develop on Master: Make code changes, push to master (use PRs if master is protected).
+
+  # Create Release Branch: When ready, branch from master as release/version (e.g., release/1.0.2), push to remote.
+
+  # Manual Release: In GitHub Actions Tab, run "Build APK & AAB Release," enter the release/version branch name.
+
+  # Auto Release: Workflow builds APK/AAB, increments version, generates release notes, creates GitHub release, deletes keystore.
+
+  # Repeat: For each release, create a new release/version branch.
