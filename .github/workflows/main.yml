@@ -9,9 +9,12 @@ on:
         required: true
         type: string
 
+permissions:
+  # Required for actions/checkout@v3
+  contents: write
+
 jobs:
   build:
-
     name: Build APK & AAB Release
     runs-on: windows-latest
 
