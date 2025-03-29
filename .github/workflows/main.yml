@@ -86,7 +86,7 @@ jobs:
           $buildGradlePath = "android/app/build.gradle"
           $content = Get-Content $buildGradlePath
           $newVersionCodeLine = "versionCode $NEW_BUILD_NUMBER"
-          $newVersionNameLine = "versionName \"$NEW_VERSION\""
+          $newVersionNameLine = "versionName `"$NEW_VERSION`""
 
           (Get-Content $buildGradlePath) | ForEach-Object {
             if ($_ -match "versionCode ") {
@@ -96,6 +96,7 @@ jobs:
               $_ = $newVersionNameLine
             }
           } | Set-Content $buildGradlePath
+        shell: pwsh
 
       # Step 8: Commit updated pubspec.yaml and build.gradle, and push changes
       - name: Commit and Push Updated pubspec.yaml and android/app/build.gradle
