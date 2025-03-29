@@ -117,30 +117,24 @@ jobs:
         id: changelog
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.TOKEN }}
           script: |
             const { data: commits } = await github.repos.listCommits({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: context.sha,
               per_page: 10,
             });
 
             let changelog = "**Changelog:**\\n";
-            let foundCommits = false;
 
             for (const commit of commits) {
               const message = commit.commit.message;
               // Include commit messages with specific prefixes: 'fix:', 'feat:', or 'chore:'
               if (message.startsWith("feat:") || message.startsWith("fix:") || message.startsWith("chore:")) {
                 changelog += `- ${message}\\n`;
-                foundCommits = true;
               }
             }
-            if (!foundCommits) {
-              changelog = "No significant changes in this release.";
-            }
-            core.setOutput("changelog", changelog);
+            // Set the generated changelog as an output
+            core.setOutput("changelog", changelog || "No significant changes in this release.");
           result-encoding: string
 
       
