@@ -24,6 +24,8 @@ jobs:
     steps:
        # Step 1: Check out the code from the repository
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.release_branch }}
 
       # Step 2: Set up Java 17 using the Zulu distribution (required for Android builds)
       - uses: actions/setup-java@v3
