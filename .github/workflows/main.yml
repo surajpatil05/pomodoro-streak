@@ -9,9 +9,12 @@ on:
         required: true
         type: string
 
+permissions:
+  # Required for actions/checkout@v3
+  contents: write
+
 jobs:
   build:
-
     name: Build APK & AAB Release
     runs-on: windows-latest
 
@@ -24,6 +27,8 @@ jobs:
     steps:
        # Step 1: Check out the code from the repository
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.release_branch }}
 
       # Step 2: Set up Java 17 using the Zulu distribution (required for Android builds)
       - uses: actions/setup-java@v3
@@ -58,23 +63,45 @@ jobs:
       - name: Increment App Version
         id: version
         run: |
-          CURRENT_VERSION=$(grep '^version: ' pubspec.yaml | cut -d " " -f2)
-          echo "Current version: $CURRENT_VERSION"
-
-          # Increment the build number by 1
-          NEW_BUILD_NUMBER=$(( $(echo "$CURRENT_VERSION" | cut -d "+" -f2) + 1 ))
-          NEW_VERSION=$(echo "$CURRENT_VERSION" | sed -E "s/\+[0-9]+$/+$NEW_BUILD_NUMBER/")
-
-          echo "New version: $NEW_VERSION"
-          sed -i "s/^version: .*/version: $NEW_VERSION/" pubspec.yaml
-
-          echo "new-version=$NEW_VERSION" >> $GITHUB_ENV
+          $pubspecPath = "pubspec.yaml"
+          $content = Get-Content $pubspecPath
+          foreach ($line in $content) {
+            if ($line -match "^version: ") {
+              $currentVersion = $line.Split(" ")[1]
+              Write-Host "Current version: $currentVersion"
+              $versionParts = $currentVersion.Split("+")
+              $buildNumber = [int]$versionParts[1] + 1
+              $newVersion = "$($versionParts[0])+$($buildNumber)"
+              Write-Host "New version: $newVersion"
+              $newVersionLine = "version: $($newVersion)"
+              (Get-Content $pubspecPath) | ForEach-Object {
+                if ($_ -match "^version: ") {
+                  $_ = $newVersionLine
+                }
+              } | Set-Content $pubspecPath
+              echo "new-version=$newVersion" >> $GITHUB_ENV
+              break
+            }
+          }
+        shell: pwsh
 
       # Step 7: Update Android build.gradle with new versionCode and versionName
       - name: Update Android Version
         run: |
-          sed -i "s/versionCode [0-9]\+/versionCode $NEW_BUILD_NUMBER/" android/app/build.gradle
-          sed -i "s/versionName \"[0-9.]\+\"/versionName \"$NEW_VERSION\"/" android/app/build.gradle
+          $buildGradlePath = "android/app/build.gradle"
+          $content = Get-Content $buildGradlePath
+          $newVersionCodeLine = "versionCode $NEW_BUILD_NUMBER"
+          $newVersionNameLine = "versionName `"$NEW_VERSION`""
+
+          (Get-Content $buildGradlePath) | ForEach-Object {
+            if ($_ -match "versionCode ") {
+              $_ = $newVersionCodeLine
+            }
+            if ($_ -match "versionName ") {
+              $_ = $newVersionNameLine
+            }
+          } | Set-Content $buildGradlePath
+        shell: pwsh
 
       # Step 8: Commit updated pubspec.yaml and build.gradle, and push changes
       - name: Commit and Push Updated pubspec.yaml and android/app/build.gradle
@@ -83,7 +110,7 @@ jobs:
           git config --local user.email "actions@github.com"
           git add pubspec.yaml android/app/build.gradle
           git commit -m "Increment app version to $NEW_VERSION"
-          git push origin release
+          git push origin ${{ github.event.inputs.release_branch }}
 
       # Step 9: Generate Release Notes
       - name: Generate Release Notes
@@ -133,7 +160,6 @@ jobs:
             
             - Built APK and AAB files
             - Updated app version to ${{ steps.version.outputs.new-version }}**
-            
             ${{ steps.changelog.outputs.result }}
           artifacts: |
             android/app/build/outputs/apk/release/app-release.apk
@@ -143,8 +169,10 @@ jobs:
       - name: Delete keystore.jks
         run: del android/app/keystore.jks
 
+        
+# Note: ✅ Run the workflow dispatch from the same branch where the workflow file is defined.
 
-# Note: while committing changes include fix:, feat:, and chore: in the commit messages to mention the changes respectively
+# Note:  ✅ Ensure while committing changes include fix:, feat:, and chore: in the commit messages to mention the changes respectively
 
 # Workflow Steps:
 
