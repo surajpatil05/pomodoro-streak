@@ -120,7 +120,7 @@ jobs:
         with:
           github-token: ${{ secrets.TOKEN }}
           script: |
-            const { data: commits } = await github.repos.listCommits({
+            const { data: commits } = await github.rest.repos.listCommits({
               owner: context.repo.owner,
               repo: context.repo.repo,
               sha: github.context.sha,
