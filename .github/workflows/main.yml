@@ -81,6 +81,8 @@ jobs:
                 }
               } | Set-Content $pubspecPath
               echo "new-version=$newVersion" >> $GITHUB_ENV
+              echo "NEW_VERSION=$newVersion" >> $GITHUB_ENV
+              echo "NEW_BUILD_NUMBER=$buildNumber" >> $GITHUB_ENV
               break
             }
           }
@@ -92,7 +94,7 @@ jobs:
           $buildGradlePath = "android/app/build.gradle"
           $content = Get-Content $buildGradlePath
           $newVersionCodeLine = "versionCode $NEW_BUILD_NUMBER"
-          $newVersionNameLine = "versionName `"$NEW_VERSION`""
+          $newVersionNameLine = "versionName \"$NEW_VERSION\""
 
           (Get-Content $buildGradlePath) | ForEach-Object {
             if ($_ -match "versionCode ") {
@@ -127,17 +129,22 @@ jobs:
               per_page: 10,
             });
 
-            let changelog = "**Changelog:**\\n";
+            let changelog = "**Changelog:**\n";
+            let foundCommits = false;
 
             for (const commit of commits) {
               const message = commit.commit.message;
               // Include commit messages with specific prefixes: 'fix:', 'feat:', or 'chore:'
               if (message.startsWith("feat:") || message.startsWith("fix:") || message.startsWith("chore:")) {
-                changelog += `- ${message}\\n`;
+                changelog += `- ${message}\n`;
+                foundCommits = true;
               }
             }
+            if (!foundCommits) {
+              changelog = "No significant changes in this release.";
+            }
             // Set the generated changelog as an output
-            core.setOutput("changelog", changelog || "No significant changes in this release.");
+            core.setOutput("changelog", changelog);
           result-encoding: string
 
       
@@ -154,15 +161,15 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.TOKEN }}
-          tag: v${{ steps.version.outputs.new-version }}
-          name: "Release v${{ steps.version.outputs.new-version }}"
+          tag: v${{ env.NEW_VERSION }}
+          name: "Release v${{ env.NEW_VERSION }}"
           draft: false
           prerelease: false
           body: |
-            **New Release Notes for Version ${{ steps.version.outputs.new-version }}**
+            **New Release Notes for Version ${{ env.NEW_VERSION }}**
             
             - Built APK and AAB files
-            - Updated app version to ${{ steps.version.outputs.new-version }}**
+            - Updated app version to ${{ env.NEW_VERSION }}**
             ${{ steps.changelog.outputs.result }}
           artifacts: |
             android/app/build/outputs/apk/release/app-release.apk
