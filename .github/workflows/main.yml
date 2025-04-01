@@ -169,8 +169,10 @@ jobs:
       - name: Delete keystore.jks
         run: del android/app/keystore.jks
 
+        
+# Note: ✅ Run the workflow dispatch from the same branch where the workflow file is defined.
 
-# Note: while committing changes include fix:, feat:, and chore: in the commit messages to mention the changes respectively
+# Note:  ✅ Ensure while committing changes include fix:, feat:, and chore: in the commit messages to mention the changes respectively
 
 # Workflow Steps:
 
