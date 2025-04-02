@@ -71,21 +71,14 @@ jobs:
           foreach ($line in $content) {
             if ($line -match "^version:\s") {
               $versionFound = $true
-              $versionLine = $line.Trim()  # Remove leading/trailing spaces
-              $versionParts = $versionLine -split '\s+' # Split by spaces
-              $versionString = $versionParts[1] #get the version string
+              $versionParts = $line -split '\s+' 
+              $versionString = $versionParts[1]
               $buildNumberPart = $versionString.Split("+")[1] -split '\s*#'
               $buildNumber = [int]$buildNumberPart[0]
-              Write-Host "Current version: $versionString"
-              Write-Host "Build number: $buildNumber"
               $newBuildNumber = $buildNumber + 1
               $newVersion = "$($versionParts[1].Split('+')[0])+$newBuildNumber"
-              Write-Host "New version: $newVersion"
-              $newVersionLine = "version: $newVersion"
-              $updatedContent += $newVersionLine
-              echo "new-version=$newVersion" >> $GITHUB_ENV
-              echo "NEW_VERSION=$newVersion" >> $GITHUB_ENV
-              echo "NEW_BUILD_NUMBER=$newBuildNumber" >> $GITHUB_ENV
+              echo "::set-output name=new-version::$newVersion"
+              $updatedContent += "version: $newVersion"
             } else {
               $updatedContent += $line
             }
@@ -182,7 +175,7 @@ jobs:
             - Updated app version to ${{ steps.version.outputs.new-version }}
             ${{ steps.changelog.outputs.result }}
           artifacts: |
-            build/app/outputs/apk/release/*.apk 
+            build/app/outputs/flutter-apk/*.apk 
             build/app/outputs/bundle/release/*.aab
 
       # delete the keystore file after the build
