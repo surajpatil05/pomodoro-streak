@@ -171,19 +171,22 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.TOKEN }}
-          tag: v${{ env.NEW_VERSION }}
-          name: "Release v${{ env.NEW_VERSION }}"
+          tag: "v${{ steps.version.outputs.new-version }}"
+          name: "Release v${{ steps.version.outputs.new-version }}"
           draft: false
           prerelease: false
           body: |
-            **New Release Notes for Version ${{ env.NEW_VERSION }}**
+            **New Release Notes for Version ${{ steps.version.outputs.new-version }}**
             
             - Built APK and AAB files
-            - Updated app version to ${{ env.NEW_VERSION }}**
+            - Updated app version to ${{ steps.version.outputs.new-version }}
             ${{ steps.changelog.outputs.result }}
           artifacts: |
-            android/app/build/outputs/apk/release/app-release.apk
-            android/app/build/outputs/bundle/release/app-release.aab
+            # This file is used for Google Play Store uploads
+            /build/app/outputs/bundle/release/app-release.aab
+
+            # This file is used for direct APK installation
+            /build/app/outputs/flutter-apk/app-release.apk
 
       # delete the keystore file after the build
       - name: Delete keystore.jks
