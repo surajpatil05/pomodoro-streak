@@ -81,9 +81,18 @@ jobs:
                 }
               } | Set-Content $pubspecPath
               echo "new-version=$newVersion" >> $GITHUB_ENV
+              echo "NEW_VERSION=$newVersion" >> $GITHUB_ENV
+              echo "NEW_BUILD_NUMBER=$buildNumber" >> $GITHUB_ENV
               break
+            } else {
+              $updatedContent += $line
             }
           }
+          if (!$versionFound) {
+            Write-Error "Version string not found in pubspec.yaml"
+            exit 1
+          } 
+          $updatedContent | Set-Content $pubspecPath
         shell: pwsh
 
       # Step 7: Update Android build.gradle with new versionCode and versionName
