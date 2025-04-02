@@ -182,11 +182,8 @@ jobs:
             - Updated app version to ${{ steps.version.outputs.new-version }}
             ${{ steps.changelog.outputs.result }}
           artifacts: |
-            # This file is used for Google Play Store uploads
-            /build/app/outputs/bundle/release/app-release.aab
-
-            # This file is used for direct APK installation
-            /build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/apk/release/*.apk 
+            build/app/outputs/bundle/release/*.aab
 
       # delete the keystore file after the build
       - name: Delete keystore.jks
