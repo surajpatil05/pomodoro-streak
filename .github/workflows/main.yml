@@ -69,21 +69,23 @@ jobs:
           $updatedContent = @()
           $versionFound = $false
           foreach ($line in $content) {
-            if ($line -match "^version:\s") { # Added \s to match space
+            if ($line -match "^version:\s") {
               $versionFound = $true
-              $currentVersion = ($line -split "version:\s*")[1] # Split by "version:" and space
-              Write-Host "Found version line: $line"
-              Write-Host "Current version: $currentVersion"
-              $versionParts = $currentVersion.Split("+")
-              $versionName = $versionParts[0]
-              $buildNumber = [int]$versionParts[1] + 1
-              $newVersion = "$versionName+$buildNumber"
+              $versionLine = $line.Trim()  # Remove leading/trailing spaces
+              $versionParts = $versionLine -split '\s+' # Split by spaces
+              $versionString = $versionParts[1] #get the version string
+              $buildNumberPart = $versionString.Split("+")[1] -split '\s*#'
+              $buildNumber = [int]$buildNumberPart[0]
+              Write-Host "Current version: $versionString"
+              Write-Host "Build number: $buildNumber"
+              $newBuildNumber = $buildNumber + 1
+              $newVersion = "$($versionParts[1].Split('+')[0])+$newBuildNumber"
               Write-Host "New version: $newVersion"
               $newVersionLine = "version: $newVersion"
               $updatedContent += $newVersionLine
               echo "new-version=$newVersion" >> $GITHUB_ENV
               echo "NEW_VERSION=$newVersion" >> $GITHUB_ENV
-              echo "NEW_BUILD_NUMBER=$buildNumber" >> $GITHUB_ENV
+              echo "NEW_BUILD_NUMBER=$newBuildNumber" >> $GITHUB_ENV
             } else {
               $updatedContent += $line
             }
@@ -94,6 +96,7 @@ jobs:
           }
           Set-Content -Path $pubspecPath -Value $updatedContent
         shell: pwsh
+
 
       # Step 7: Update Android build.gradle with new versionCode and versionName
       - name: Update Android Version
