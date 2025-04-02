@@ -66,24 +66,24 @@ jobs:
         run: |
           $pubspecPath = "pubspec.yaml"
           $content = Get-Content $pubspecPath
+          $updatedContent = @()
+          $versionFound = $false
           foreach ($line in $content) {
-            if ($line -match "^version: ") {
-              $currentVersion = $line.Split(" ")[1]
+            if ($line -match "^version:\s") { # Added \s to match space
+              $versionFound = $true
+              $currentVersion = ($line -split "version:\s*")[1] # Split by "version:" and space
+              Write-Host "Found version line: $line"
               Write-Host "Current version: $currentVersion"
               $versionParts = $currentVersion.Split("+")
+              $versionName = $versionParts[0]
               $buildNumber = [int]$versionParts[1] + 1
-              $newVersion = "$($versionParts[0])+$($buildNumber)"
+              $newVersion = "$versionName+$buildNumber"
               Write-Host "New version: $newVersion"
-              $newVersionLine = "version: $($newVersion)"
-              (Get-Content $pubspecPath) | ForEach-Object {
-                if ($_ -match "^version: ") {
-                  $_ = $newVersionLine
-                }
-              } | Set-Content $pubspecPath
+              $newVersionLine = "version: $newVersion"
+              $updatedContent += $newVersionLine
               echo "new-version=$newVersion" >> $GITHUB_ENV
               echo "NEW_VERSION=$newVersion" >> $GITHUB_ENV
               echo "NEW_BUILD_NUMBER=$buildNumber" >> $GITHUB_ENV
-              break
             } else {
               $updatedContent += $line
             }
@@ -91,8 +91,8 @@ jobs:
           if (!$versionFound) {
             Write-Error "Version string not found in pubspec.yaml"
             exit 1
-          } 
-          $updatedContent | Set-Content $pubspecPath
+          }
+          Set-Content -Path $pubspecPath -Value $updatedContent
         shell: pwsh
 
       # Step 7: Update Android build.gradle with new versionCode and versionName
