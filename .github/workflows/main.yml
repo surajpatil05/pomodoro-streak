@@ -81,8 +81,6 @@ jobs:
                 }
               } | Set-Content $pubspecPath
               echo "new-version=$newVersion" >> $GITHUB_ENV
-              echo "NEW_VERSION=$newVersion" >> $GITHUB_ENV
-              echo "NEW_BUILD_NUMBER=$buildNumber" >> $GITHUB_ENV
               break
             }
           }
