@@ -78,6 +78,7 @@ jobs:
               $newBuildNumber = $buildNumber + 1
               $newVersion = "$($versionParts[1].Split('+')[0])+$newBuildNumber"
               echo "NEW_VERSION=$newVersion" | Out-File -FilePath $env:GITHUB_ENV -Append
+              echo "::set-output name=new-version::$newVersion"
               $updatedContent += "version: $newVersion"
             } else {
               $updatedContent += $line
@@ -168,6 +169,7 @@ jobs:
           name: "Release v${{ steps.version.outputs.new-version }}"
           draft: false
           prerelease: false
+          generateReleaseNotes: false
           body: |
             **New Release Notes for Version ${{ steps.version.outputs.new-version }}**
             
@@ -177,6 +179,7 @@ jobs:
           artifacts: |
             build/app/outputs/apk/release/*.apk
             build/app/outputs/bundle/release/*.aab
+          removeArtifacts: true
 
       # Step 12: Delete source archives
       - name: Delete source archives
