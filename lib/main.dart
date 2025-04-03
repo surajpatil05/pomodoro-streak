@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/foundation.dart';
 
+import 'package:flutter/services.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -67,11 +69,17 @@ void main() async {
     debugPrint = (String? message, {int? wrapWidth}) {};
   }
 
-  runApp(
-    ProviderScope(
-      child: const MyApp(),
-    ),
-  );
+  // Lock screen orientation to Portrait only
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(
+      ProviderScope(
+        child: const MyApp(),
+      ),
+    );
+  });
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -149,7 +157,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return ScreenUtilInit(
       designSize: const Size(411, 891),
       minTextAdapt: true, // Allow text to scale down
-      splitScreenMode: true, // Support split-screen mode
+      splitScreenMode: false, // Support split-screen mode
       child: MaterialApp(
         title: 'Pomodoro App',
         theme: themeData,
