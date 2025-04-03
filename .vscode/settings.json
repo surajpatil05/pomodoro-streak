@@ -4,6 +4,7 @@
     "java.compile.nullAnalysis.mode": "automatic",
     "cSpell.words": [
         "allprojects",
+        "androidx",
         "appbundle",
         "AUTOINCREMENT",
         "bottomsheet",
