@@ -128,10 +128,11 @@ jobs:
         with:
           github-token: ${{ secrets.TOKEN }}
           script: |
+            const branch = "${{ github.event.inputs.release_branch }}";
             const { data: commits } = await github.rest.repos.listCommits({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: "${{ github.sha }}",
+              sha: branch,
               per_page: 10,
             });
 
@@ -139,9 +140,12 @@ jobs:
             let foundCommits = false;
 
             for (const commit of commits) {
-              const message = commit.commit.message;
+              const message = commit.commit.message.trim();
+              const lowerMessage = message.toLowerCase();
               // Include commit messages with specific prefixes: 'fix:', 'feat:', or 'chore:'
-              if (message.startsWith("feat:") || message.startsWith("fix:") || message.startsWith("chore:")) {
+              if (lowerMessage.startsWith("feat:") || 
+                  lowerMessage.startsWith("fix:") || 
+                  lowerMessage.startsWith("chore:")) {
                 changelog += `- ${message}\n`;
                 foundCommits = true;
               }
