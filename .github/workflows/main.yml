@@ -181,8 +181,8 @@ jobs:
       # Step 12: Delete source archives
       - name: Delete source archives
         run: |
-          del "v${{ steps.version.outputs.new-version }}.zip"
-          del "v${{ steps.version.outputs.new-version }}.tar.gz"
+          cd ./
+          Get-ChildItem "v${{ env.NEW_VERSION }}.*" | Remove-Item -Force
         shell: pwsh
 
       # Step 13: delete the keystore file after the build
