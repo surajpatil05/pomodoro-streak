@@ -77,7 +77,10 @@ jobs:
               $buildNumber = [int]$buildNumberPart[0]
               $newBuildNumber = $buildNumber + 1
               $newVersion = "$($versionParts[1].Split('+')[0])+$newBuildNumber"
+
               echo "NEW_VERSION=$newVersion" | Out-File -FilePath $env:GITHUB_ENV -Append
+              echo "::set-output name=new-version::$newVersion"
+
               $updatedContent += "version: $newVersion"
             } else {
               $updatedContent += $line
@@ -178,13 +181,7 @@ jobs:
             build/app/outputs/apk/release/*.apk
             build/app/outputs/bundle/release/*.aab
 
-      # Step 12: Delete source archives
-      - name: Delete source archives
-        run: |
-          Remove-Item -Path "*.zip", "*.tar.gz" -Force -ErrorAction Ignore
-        shell: pwsh
-
-      # Step 13: delete the keystore file after the build
+      # Step 12: delete the keystore file after the build
       - name: Delete keystore.jks
         run: del android/app/keystore.jks
 
