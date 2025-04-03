@@ -188,7 +188,7 @@ jobs:
         
 # Note: ✅ Run the workflow dispatch from the same branch where the workflow file is defined.
 
-# Note:  ✅ Ensure while committing changes include fix:, feat:, and chore: in the commit messages to mention the changes respectively
+# Note:  ✅ Ensure while committing changes include fix:, feat:, and chore:, refactor:, docs:, test: in the commit messages to mention the changes respectively
 
 # Workflow Steps:
 
