@@ -175,7 +175,7 @@ jobs:
             - Updated app version to ${{ steps.version.outputs.new-version }}
             ${{ steps.changelog.outputs.result }}
           artifacts: |
-            build/app/outputs/flutter-apk/*.apk 
+            build/outputs/apk/release/*.apk
             build/app/outputs/bundle/release/*.aab
 
       # delete the keystore file after the build
