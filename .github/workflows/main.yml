@@ -128,36 +128,47 @@ jobs:
         with:
           github-token: ${{ secrets.TOKEN }}
           script: |
-            const branch = "${{ github.event.inputs.release_branch }}";
-            const { data: commits } = await github.rest.repos.listCommits({
+            const releaseBranch = "${{ github.event.inputs.release_branch }}";
+
+            // Fetch latest tags
+            const { data: tags } = await github.rest.repos.listTags({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: branch,
-              per_page: 10,
+              per_page: 1,  // Get only the most recent tag
+            });
+
+            if (tags.length === 0) {
+              console.log("No previous tags found. Using default base as 'main'.");
+              var baseTag = "main"; // Default to comparing with the main branch if no tags exist
+            } else {
+              var baseTag = tags[0].name; // Latest tag
+            }
+
+            console.log(`Comparing changes from ${baseTag} to ${releaseBranch}...`);
+
+            const { data: comparison } = await github.rest.repos.compareCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              base: baseTag,
+              head: releaseBranch,
             });
 
             let changelog = "**Changelog:**\n";
-            let foundCommits = false;
+            let found = false;
 
-            for (const commit of commits) {
-              const message = commit.commit.message.trim();
-              const lowerMessage = message.toLowerCase();
-              // Include commit messages with specific prefixes: 'fix:', 'feat:', or 'chore:'
-              if (lowerMessage.startsWith("feat:") || 
-                  lowerMessage.startsWith("fix:") || 
-                  lowerMessage.startsWith("chore:")) {
-                changelog += `- ${message}\n`;
-                foundCommits = true;
+            for (const commit of comparison.commits) {
+            const msg = commit.commit.message.trim();
+            if (/^(fix|feat|chore|docs|refactor|test):/i.test(msg)) {
+              changelog += `- ${msg}\n`;
+              found = true;
               }
             }
-            if (!foundCommits) {
-              changelog = "No significant changes in this release.";
-            }
+            if (!found) changelog = "No significant changes in this release.";
+
             // Set the generated changelog as an output
             core.setOutput("changelog", changelog);
           result-encoding: string
 
-      
       # Step 10: Build the APK and AAB (Release Mode)
       - name: Build APK and AAB
         run: |
@@ -180,7 +191,7 @@ jobs:
             
             - Built APK and AAB files
             - Updated app version to ${{ steps.version.outputs.new-version }}
-            ${{ steps.changelog.outputs.result }}
+            ${{ steps.changelog.outputs.changelog }}
           artifacts: |
             build/app/outputs/apk/release/*.apk
             build/app/outputs/bundle/release/*.aab
