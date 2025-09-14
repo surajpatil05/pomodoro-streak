@@ -56,7 +56,7 @@ class NotificationService {
       id,
       title,
       body,
-      await notificationDetails(),
+      notificationDetails(),
     );
   }
 
