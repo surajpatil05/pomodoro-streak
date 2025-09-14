@@ -8,7 +8,7 @@ class AppUpdateService {
     try {
       return await InAppUpdate.checkForUpdate();
     } catch (e) {
-      debugPrint("Error checking for update: $e");
+      debugPrint("Error checking for update update skipped: $e");
       return null;
     }
   }

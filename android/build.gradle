@@ -4,7 +4,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.1'  // AGP version matches settings.gradle
+        // classpath 'com.android.tools.build:gradle:8.2.1'  // AGP version matches settings.gradle
+        // 16 kb page size requirement changes - updated AGP to 8.6.0
+        classpath 'com.android.tools.build:gradle:8.6.0'  // AGP version matches settings.gradle
     }
 }
 
